@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FarmacoActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Nombre del medicamento -->
+            <EditText
+                android:id="@+id/et_medicamento_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre del medicamento"
+                android:inputType="text" />
+
+            <!-- Concentración -->
+            <EditText
+                android:id="@+id/et_medicamento_concentracion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Concentración"
+                android:inputType="text" />
+
+            <!-- Laboratorio -->
+            <EditText
+                android:id="@+id/et_medicamento_laboratorio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Laboratorio"
+                android:inputType="text" />
+
+            <!-- Proveedor -->
+            <EditText
+                android:id="@+id/et_medicamento_proveedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Proveedor"
+                android:inputType="text" />
+
+            <!-- Cantidad en inventario -->
+            <EditText
+                android:id="@+id/et_medicamento_cantidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cantidad en inventario"
+                android:inputType="number" />
+
+            <!-- Botón para agregar medicamento al inventario -->
+            <Button
+                android:id="@+id/btn_agregar_medicamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Agregar medicamento"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

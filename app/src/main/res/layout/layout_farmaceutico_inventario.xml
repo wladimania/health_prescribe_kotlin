@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FarmaceuticoInventarioActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <!-- Campo para ingresar el nombre del medicamento -->
+        <EditText
+            android:id="@+id/et_nombre_medicamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del medicamento"
+            android:inputType="text" />
+
+        <!-- Campo para ingresar la cantidad del medicamento -->
+        <EditText
+            android:id="@+id/et_cantidad_medicamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cantidad"
+            android:inputType="number" />
+
+        <!-- Campo para ingresar la concentración del medicamento -->
+        <EditText
+            android:id="@+id/et_concentracion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Concentración"
+            android:inputType="text" />
+
+        <!-- Campo para ingresar el laboratorio -->
+        <EditText
+            android:id="@+id/et_laboratorio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Laboratorio"
+            android:inputType="text" />
+
+        <!-- Botón para agregar al inventario -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar al inventario"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

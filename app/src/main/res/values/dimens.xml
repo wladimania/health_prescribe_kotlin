@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Valor de margen de la tarjeta -->
+    <dimen name="card_margin">8dp</dimen>
+
+    <!-- Elevación de la tarjeta -->
+    <dimen name="card_elevation">4dp</dimen>
+</resources>

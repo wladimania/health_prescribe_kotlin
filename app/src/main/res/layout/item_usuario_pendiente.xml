@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ItemUsuarioPendienteActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+        <!-- Nombre completo del usuario -->
+        <TextView
+            android:id="@+id/tv_nombre_completo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre completo" />
+
+        <!-- Rol solicitado por el usuario -->
+        <TextView
+            android:id="@+id/tv_rol_solicitado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rol solicitado" />
+
+        <!-- Fecha de solicitud -->
+        <TextView
+            android:id="@+id/tv_fecha_solicitud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de solicitud" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

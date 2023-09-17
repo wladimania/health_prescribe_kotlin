@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <!-- Contenido de la tarjeta -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_selected_drug_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre del medicamento: "
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_selected_drug_concentration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Concentración del medicamento: "
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_selected_drug_provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nombre del proveedor: "
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/et_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Cantidad de medicamentos"/>
+
+        <EditText
+            android:id="@+id/et_prescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Prescripción médica"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
