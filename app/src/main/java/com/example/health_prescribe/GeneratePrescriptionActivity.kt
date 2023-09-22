@@ -55,25 +55,7 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.generate_prescription) // Asegúrate de que el nombre sea el correcto
-        val callback = object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                fingerprintData = byteArrayOf()  // (tu implementación aquí)
 
-                DatabaseConnection.updateFingerprintAsync(
-                    selectedPatients?.id_cliente ?: 0,
-                    fingerprintData ?: byteArrayOf()
-                ) { success ->
-                    if (success) {
-                        Log.d("BiometricAuth", "Huella dactilar actualizada exitosamente.")
-                    } else {
-                        Log.d("BiometricAuth", "Fallo al actualizar huella dactilar.")
-                    }
-                }
-            }
-        }
-
-            val biometricPrompt = BiometricPrompt(this, executor, callback)
         tv_patient_name = findViewById(R.id.tv_patient_name)
         tv_patient_lastname = findViewById(R.id.tv_patient_lastname)
         tv_patient_cedula = findViewById(R.id.tv_patient_cedula)
@@ -110,20 +92,8 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
                 if (selectedDrugs.isEmpty()) {
                     Toast.makeText(this, "Por favor, seleccione al menos un medicamento", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
-                } // Verifica que el paciente tenga una huella dactilar registrada
-                if (selectedPatients?.huellaDactilar is ByteArray && (selectedPatients?.huellaDactilar as ByteArray).isEmpty()) {
-                    // Aquí, abrirás un diálogo para la autenticación biométrica y guardas la huella digital.
-                    val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                        .setTitle("Registrar huella dactilar")
-                        .setSubtitle("Por favor, siga las instrucciones para registrar su huella dactilar.")
-                        .setNegativeButtonText("Cancelar")
-                        .build()
-                    biometricPrompt.authenticate(promptInfo)
-
-                    // Suponiendo que tienes una variable `fingerprintData` que almacena la huella dactilar
-                   // DatabaseConnection.updateFingerprint(selectedPatients?.id_cliente ?: 0, fingerprintData ?: byteArrayOf())
-                    return@setOnClickListener
                 }
+
 
                 // Valida que se haya ingresado una cantidad y descripción para cada medicamento
                 val dosisEditText = findViewById<EditText>(R.id.et_quantity)
@@ -173,6 +143,26 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, seleccione un paciente", Toast.LENGTH_SHORT).show()
             }
         }
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                fingerprintData = byteArrayOf()  // (tu implementación aquí)
+
+                DatabaseConnection.updateFingerprintAsync(
+                    selectedPatients?.id_cliente ?: 0,
+                    fingerprintData ?: byteArrayOf()
+                ) { success ->
+                    if (success) {
+                        Log.d("BiometricAuth", "Huella dactilar actualizada exitosamente.")
+                    } else {
+                        Log.d("BiometricAuth", "Fallo al actualizar huella dactilar.")
+                    }
+                }
+            }
+        }
+
+
+        val biometricPrompt = BiometricPrompt(this, executor, callback)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -183,6 +173,7 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
                 addSelectedDrug(selectedDrug)
             }
         }
+
     }
 
     private inner class FetchPatientsTask : AsyncTask<Void, Void, List<PacienteDetalle>>() {
@@ -201,11 +192,11 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     selectedPatients = result[position]
-                    tv_patient_name.text = "Nombre: ${selectedPatients?.nombre}"
-                    tv_patient_lastname.text = "Apellido: ${selectedPatients?.apellido}"
-                    tv_patient_cedula.text = "Cédula: ${selectedPatients?.cedula}"
-                    tv_patient_phone.text = "Teléfono: ${selectedPatients?.telefono}"
-                    tv_patient_email.text = "Correo: ${selectedPatients?.correo}"
+                    tv_patient_name.text = " ${selectedPatients?.nombre}"
+                    tv_patient_lastname.text = " ${selectedPatients?.apellido}"
+                    tv_patient_cedula.text = " ${selectedPatients?.cedula}"
+                    tv_patient_phone.text = " 0${selectedPatients?.telefono}"
+                    tv_patient_email.text = " ${selectedPatients?.correo}"
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -236,9 +227,9 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val selectedDrug = drugs[position]
-            holder.tvName.text = "Nombre del medicamento: ${selectedDrug.nombre_generico}"
-            holder.tvConcentration.text = "Concentración del medicamento: ${selectedDrug.concentracion}"
-            holder.tvProvider.text = "Nombre del proveedor: ${selectedDrug.proveedor.nombre_proveedor}"
+            holder.tvName.text = " ${selectedDrug.nombre_generico}"
+            holder.tvConcentration.text = " ${selectedDrug.concentracion}"
+            holder.tvProvider.text = " ${selectedDrug.proveedor.nombre_proveedor}"
         }
 
         override fun getItemCount(): Int {

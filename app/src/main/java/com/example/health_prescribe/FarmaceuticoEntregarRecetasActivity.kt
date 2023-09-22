@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.health_prescribe.adapter.FarmacoAdapter
@@ -17,17 +19,25 @@ import kotlinx.coroutines.*
 class FarmaceuticoEntregarRecetasActivity : AppCompatActivity() {
     private val farmacosList = mutableListOf<receta_listado>()
     private lateinit var farmacosAdapter: FarmacoAdapter
+    private var farmaceuticoId: Int = -1 // Declarar la variable aquí
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_farmaceutico_entregar_recetas)
 
+        farmaceuticoId = intent.getIntExtra("farmaceuticoId", -1) // Inicializar aquí
+
+        if(farmaceuticoId == -1) {
+            // El ID no se pasó correctamente. Posiblemente cerrar la actividad y volver a la anterior.
+            finish()
+            return
+        }
+
         val et_buscar_receta: EditText = findViewById(R.id.et_buscar_receta)
         val rvFarmacos: RecyclerView = findViewById(R.id.rv_farmacos)
 
-        // Inicializa el adaptador aquí
+        // Inicializar el adaptador aquí
         farmacosAdapter = FarmacoAdapter(farmacoDisplayList)
-
 
         // Configurar el RecyclerView
         rvFarmacos.layoutManager = LinearLayoutManager(this)
@@ -45,8 +55,12 @@ class FarmaceuticoEntregarRecetasActivity : AppCompatActivity() {
 
         // Puedes iniciar una búsqueda por defecto al inicio si lo deseas
         buscarReceta("CODIGO_EJEMPLO")
-    }
 
+        val btn_entregar_receta: Button = findViewById(R.id.btn_entregar_receta)
+        btn_entregar_receta.setOnClickListener {
+            entregarReceta()
+        }
+    }
     private fun transformToDisplay(list: List<receta_listado>, farmacos: List<farmaco>): List<FarmacoDisplay> {
         return list.map { item ->
             val farmacoInfo = farmacos.find { it.id_farmaco == item.id_farmaco }
@@ -63,6 +77,30 @@ class FarmaceuticoEntregarRecetasActivity : AppCompatActivity() {
 
 
     private val farmacoDisplayList = mutableListOf<FarmacoDisplay>()
+    fun entregarReceta() {
+        val et_buscar_receta: EditText = findViewById(R.id.et_buscar_receta)
+        val codigoReceta = et_buscar_receta.text.toString()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val receta = withContext(Dispatchers.IO) {
+                DatabaseConnection.getRecetaByCodigo(codigoReceta)
+            }
+
+            if (receta != null) {
+                val actualizado = withContext(Dispatchers.IO) {
+                    DatabaseConnection.updateRecetaEstadoYFarmaceutico(receta.id_receta!!, "Entregada", farmaceuticoId)
+                }
+
+                if (actualizado) {
+                    Toast.makeText(this@FarmaceuticoEntregarRecetasActivity, "Receta entregada con éxito", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@FarmaceuticoEntregarRecetasActivity, "Error al entregar la receta", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this@FarmaceuticoEntregarRecetasActivity, "Receta no encontrada", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 
     fun buscarReceta(codigoReceta: String) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Otros estilos ya existentes en tu archivo -->
+
+    <!-- Estilo personalizado para TextInputLayout -->
+    <style name="TextAppearance.App.TextInputLayout" parent="TextAppearance.MaterialComponents.Body1">
+        <!-- personaliza los atributos que desees -->
+        <item name="android:textColorHint">#9E9E9E</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>

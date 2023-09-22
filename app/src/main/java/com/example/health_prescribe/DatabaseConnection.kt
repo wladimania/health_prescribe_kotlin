@@ -12,6 +12,7 @@ import com.example.health_prescribe.model.receta
 import com.example.health_prescribe.model.receta_listado
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -451,35 +452,61 @@ object DatabaseConnection {
     }
 
     fun updateFingerprint(idCliente: Int, huellaDactilar: ByteArray): Boolean {
-        val connection = getConnection()
+        var connection: Connection? = null
+        var preparedStatement: PreparedStatement? = null
         var rowsUpdated = 0
-        Log.d("updateFingerprint", "Valor de huellaDactilar en Base64: ${Base64.getEncoder().encodeToString(huellaDactilar)}")
-
         try {
-            val query = """
-            UPDATE cliente
-            SET huellaDactilar = ?
-            WHERE id_cliente = ?
-        """
-
-            val preparedStatement = connection?.prepareStatement(query)
+            connection = getConnection()
+            val query = "UPDATE cliente SET huellaDactilar = ? WHERE id_cliente = ?"
+            preparedStatement = connection?.prepareStatement(query)
             preparedStatement?.setBytes(1, huellaDactilar)
             preparedStatement?.setInt(2, idCliente)
             rowsUpdated = preparedStatement?.executeUpdate() ?: 0
         } catch (e: SQLException) {
-            e.printStackTrace()
+            Log.e("DBConnectionError", "Error al actualizar la huella dactilar", e)
         } finally {
+            // Asegurarte de cerrar los recursos en el bloque finally
+            preparedStatement?.close()
             connection?.close()
         }
-
         return rowsUpdated == 1
     }
+
     fun updateFingerprintAsync(idCliente: Int, huellaDactilar: ByteArray, callback: (Boolean) -> Unit) {
         AsyncTask.execute {
-            val result = updateFingerprint(idCliente, huellaDactilar)
-            callback(result)
+            var connection: Connection? = null
+            var preparedStatement: PreparedStatement? = null
+            var rowsUpdated = 0
+            try {
+                connection = DriverManager.getConnection(url, user, password)
+                val query = "UPDATE cliente SET huellaDactilar = ? WHERE id_cliente = ?"
+                preparedStatement = connection?.prepareStatement(query)
+                preparedStatement?.setBytes(1, huellaDactilar)
+                preparedStatement?.setInt(2, idCliente)
+                rowsUpdated = preparedStatement?.executeUpdate() ?: 0
+                callback(rowsUpdated == 1)
+            } catch (e: SQLException) {
+                Log.e("DBConnectionError", "Error al actualizar la huella dactilar", e)
+                callback(false)
+            } finally {
+                preparedStatement?.close()
+                connection?.close()
+            }
         }
     }
+    fun updateRecetaEstadoYFarmaceutico(idReceta: Int, nuevoEstado: String, idFarmaceutico: Int): Boolean {
+        val connection = getConnection()
+        val statement = connection?.createStatement()
+        val rowsAffected = statement?.executeUpdate(
+            "UPDATE receta SET estado = '$nuevoEstado', id_farmaceutico = $idFarmaceutico, fecha_entrega = CURRENT_TIMESTAMP WHERE id_receta = $idReceta"
+        )
+        connection?.close()
+        return rowsAffected == 1
+    }
+
+
+
+
 }
 
 

@@ -15,6 +15,7 @@ class RecetasMedicoAdapter(private val recetasList: List<recetas>) : RecyclerVie
         val tvFechaGeneracion: TextView = itemView.findViewById(R.id.tv_fecha_generacion)
         val tvFechaEntrega: TextView = itemView.findViewById(R.id.tv_fecha_entrega)
         val tvEstadoReceta: TextView = itemView.findViewById(R.id.tv_estado_receta)
+        val tvCodigoReceta: TextView = itemView.findViewById(R.id.tv_codigo_receta)
     }
     init {
         Log.d("RecetasMedicoAdapter", "Número de recetas en el adaptador: ${recetasList.size}")
@@ -32,9 +33,10 @@ class RecetasMedicoAdapter(private val recetasList: List<recetas>) : RecyclerVie
 
     override fun onBindViewHolder(holder: RecetaViewHolder, position: Int) {
         val receta = recetasList[position]
-        holder.tvNombrePaciente.text = "Nombre del Paciente:${receta.nombreApellido}"  // Esto es un placeholder. Deberías obtener el nombre del paciente de alguna forma.
-        holder.tvFechaGeneracion.text = "Fecha de Creación: ${receta.fecha_create?.toString() ?: "Generación en curso"}"
-        holder.tvFechaEntrega.text = "Fecha de Entrega: ${receta.fecha_entrega?.toString() ?: "No entregado aún"}"
-        holder.tvEstadoReceta.text = "Estado de la Receta: ${receta.estado}"
+        holder.tvNombrePaciente.text = " ${receta.nombreApellido}"  // Esto es un placeholder. Deberías obtener el nombre del paciente de alguna forma.
+        holder.tvFechaGeneracion.text = " ${receta.fecha_create?.toString() ?: "Generación en curso"}"
+        holder.tvFechaEntrega.text = " ${receta.fecha_entrega?.toString() ?: "No entregado aún"}"
+        holder.tvEstadoReceta.text = " ${receta.estado}"
+        holder.tvCodigoReceta.text = " ${receta.codigo_receta}"
     }
 }

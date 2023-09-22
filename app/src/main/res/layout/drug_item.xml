@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="16dp"
+    android:elevation="4dp"
     android:background="@drawable/card_border">
 
     <LinearLayout
@@ -11,63 +12,133 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:id="@+id/drugContainer">
+        android:id="@+id/drugContainer"
+        android:background="@drawable/card_inner_border">
 
+        <!-- Icono y Nombre del medicamento -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_drug"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tv_drug_name_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nombre del medicamento: "
+                android:layout_marginStart="12dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Valor del nombre del medicamento -->
         <TextView
+
             android:id="@+id/tv_drug_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre del medicamento: "
-            android:textStyle="bold"/>
+            android:layout_marginTop="2dp"/>
 
-        <TextView
-            android:id="@+id/tv_drug_name_value"
+        <!-- Icono y Concentración del medicamento -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/medicament"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tv_drug_concentration_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Concentración del medicamento: "
+                android:layout_marginStart="12dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Valor de la concentración del medicamento -->
         <TextView
+
             android:id="@+id/tv_drug_concentration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Concentración del medicamento: "
-            android:layout_marginTop="8dp"
-            android:textStyle="bold"/>
+            android:layout_marginTop="2dp"/>
 
-        <TextView
-            android:id="@+id/tv_drug_concentration_value"
+        <!-- Icono y Cantidad en inventario -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_inventory"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tv_drug_lab_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cantidad en inventario: "
+                android:layout_marginStart="12dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Valor de la cantidad en inventario -->
         <TextView
             android:id="@+id/tv_drug_lab"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cantidad en inventario: "
-            android:layout_marginTop="8dp"
-            android:textStyle="bold"/>
+            android:layout_marginTop="2dp"/>
 
-        <TextView
-            android:id="@+id/tv_drug_lab_value"
+        <!-- Icono y Nombre del proveedor -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_provider"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/tv_drug_provider_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nombre del proveedor: "
+                android:layout_marginStart="12dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Valor del nombre del proveedor -->
         <TextView
             android:id="@+id/tv_drug_provider"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre del proveedor: "
-            android:layout_marginTop="8dp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tv_drug_provider_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"/>
-
+            android:layout_marginTop="2dp"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
+

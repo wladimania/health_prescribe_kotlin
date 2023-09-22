@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp">
+
+    <!-- Texto de Bienvenida -->
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:drawablePadding="12dp"
+        android:drawableTop="@drawable/ic_welcome_icon"/>
 
     <!-- Sección de datos del médico -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         android:padding="16dp"
         android:layout_marginBottom="16dp"
         android:elevation="4dp"
+        android:background="@android:color/white"
         android:gravity="center_horizontal">
 
         <TextView
@@ -23,7 +44,9 @@
             android:layout_height="wrap_content"
             android:text="Dr. "
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:drawablePadding="12dp"
+            android:drawableLeft="@drawable/doctor"/>
 
         <TextView
             android:id="@+id/tv_doctor_specialty"
@@ -31,22 +54,58 @@
             android:layout_height="wrap_content"
             android:text="Especialidad: "
             android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
+            android:layout_marginTop="8dp"
+            android:drawablePadding="12dp"
+            />
     </LinearLayout>
 
     <!-- Botones principales del layout -->
-    <Button
-        android:id="@+id/btn_generate_prescription"
-        android:layout_width="match_parent"
+    <!-- Botones principales del layout -->
+    <!-- Contenedor para el botón "Generar Receta" y su icono -->
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Generar Receta"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/btn_view_prescriptions"
-        android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_prescription_generate"
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/btn_generate_prescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generar Receta"
+            android:layout_marginStart="12dp"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <!-- Contenedor para el botón "Visualizar Mis Recetas" y su icono -->
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visualizar Mis Recetas"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal">
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_prescription_view"
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/btn_view_prescriptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Visualizar Mis Recetas"
+            android:layout_marginStart="12dp"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

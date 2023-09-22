@@ -16,6 +16,15 @@
             android:padding="16dp"
             android:orientation="vertical">
 
+            <!-- Title: Entregar Receta -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entregar Receta"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_marginBottom="16dp"/>
+
             <!-- Datos del paciente -->
             <TextView
                 android:id="@+id/tv_paciente_data"
@@ -29,7 +38,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre del paciente: "/>
-
 
             <!-- Datos del médico -->
             <TextView
@@ -51,9 +59,10 @@
                 android:id="@+id/tv_farmacos_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Listado de Fármacos:"
+                android:text="Codigo de receta"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal" />
 
             <!-- Campo para buscar receta por nombre del paciente o código de receta -->
             <EditText
@@ -61,17 +70,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Buscar receta..."
-                android:inputType="text"
-                android:layout_marginTop="16dp" />
+                android:inputType="number"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal" />
+
 
             <!-- Botón para validar con huella dactilar -->
 
             <!-- Listado de recetas pendientes de entrega -->
             <Button
+                android:id="@+id/btn_entregar_receta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Validar con Huella Dactilar" />
+                android:text="Entregar Receta" />
 
             <LinearLayout
                 android:id="@+id/ll_farmacos_list"
@@ -103,9 +116,6 @@
 
                 </LinearLayout>
             </ScrollView>
-
-
-
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,42 +3,90 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/card_border">
 
-    <!-- TextView para mostrar el nombre y apellido del paciente -->
+    <!-- Nombre y apellido del paciente -->
     <TextView
-        android:id="@+id/tv_nombre_apellidos_paciente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre del Paciente"
+        android:text="Nombre del Paciente:"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- TextView para mostrar la fecha de generación de la receta -->
+    <TextView
+        android:id="@+id/tv_nombre_apellidos_paciente"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Código de la Receta -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Código de la Receta:"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nombre_apellidos_paciente"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_codigo_receta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nombre_apellidos_paciente"/>
+
+    <!-- Fecha de Generación -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha de Generación:"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tv_codigo_receta"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
         android:id="@+id/tv_fecha_generacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_codigo_receta"/>
+
+    <!-- Fecha de Entrega -->
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fecha de Generación"
-        app:layout_constraintTop_toBottomOf="@id/tv_nombre_apellidos_paciente"
+        android:text="Fecha de Entrega:"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fecha_generacion"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- TextView para mostrar la fecha de entrega de la receta -->
     <TextView
         android:id="@+id/tv_fecha_entrega"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fecha_generacion"/>
+
+    <!-- Estado de la Receta -->
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fecha de Entrega"
-        app:layout_constraintTop_toBottomOf="@id/tv_fecha_generacion"
+        android:text="Estado de la Receta:"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fecha_entrega"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- TextView para mostrar el estado de la receta -->
     <TextView
         android:id="@+id/tv_estado_receta"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Estado de la Receta"
-        app:layout_constraintTop_toBottomOf="@id/tv_fecha_entrega"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fecha_entrega"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

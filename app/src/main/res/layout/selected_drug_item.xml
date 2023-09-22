@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="8dp"
+    android:layout_margin="16dp"
     android:elevation="4dp">
 
     <!-- Contenido de la tarjeta -->
@@ -14,42 +14,87 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_selected_drug_name"
+        <!-- Contenedor para Nombre del medicamento -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre del medicamento: "
-            android:textStyle="bold"/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_selected_drug_concentration"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nombre: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_selected_drug_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- Contenedor para Concentración del medicamento -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Concentración del medicamento: "
-            android:textStyle="bold"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
-        <TextView
-            android:id="@+id/tv_selected_drug_provider"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Concentración: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_selected_drug_concentration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- Contenedor para Nombre del proveedor -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Nombre del proveedor: "
-            android:textStyle="bold"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Proveedor: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_selected_drug_provider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+        <!-- Cantidad de medicamentos -->
         <EditText
             android:id="@+id/et_quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Cantidad de medicamentos"/>
+            android:layout_marginTop="4dp"
+            android:hint="Cantidad de medicamentos"
+            android:inputType="number"
+            android:textStyle="normal"/>
 
+
+        <!-- Prescripción médica -->
         <EditText
             android:id="@+id/et_prescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Prescripción médica"/>
-
+            android:layout_marginTop="4dp"
+            android:hint="Prescripción médica"
+            android:textStyle="normal"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

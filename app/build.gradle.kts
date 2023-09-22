@@ -57,5 +57,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
 
+    implementation ("com.google.android.material:material:<latest_version>")
+    implementation ("com.google.android.material:material:1.5.0")
 
 }

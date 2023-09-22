@@ -1,45 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:padding="24dp">
 
-    <!-- Sección de datos del farmacéutico -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp"
-        android:elevation="4dp"
-        android:gravity="center_horizontal"
-        android:background="@android:color/white">
+        android:gravity="center_vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp">
 
+        <!-- Texto de Bienvenida -->
         <TextView
             android:id="@+id/tv_welcome_farmaceutico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bienvenido, Farmacéutico: "
+            android:text="Bienvenido, Farmacéutico"
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:drawablePadding="12dp"
+            android:drawableTop="@drawable/farmaceutico"/>
 
+        <!-- Sección de datos del farmacéutico -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal">
+
+            <!-- Any additional information can be added here -->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_prescription_generate"
+                android:layout_gravity="center_vertical"/>
+
+            <Button
+                android:id="@+id/btn_entregar_receta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entregar Receta"
+                android:layout_marginStart="12dp"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+
+        <!-- Contenedor para el botón "Inventario" y su icono -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_prescription_view"
+                android:layout_gravity="center_vertical"/>
+
+            <Button
+                android:id="@+id/btn_inventario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inventario"
+                android:layout_marginStart="12dp"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Botones principales del layout -->
-    <Button
-        android:id="@+id/btn_entregar_receta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Entregar Receta"
-        android:layout_marginTop="16dp"/>
-
-    <Button
-        android:id="@+id/btn_inventario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Inventario"
-        android:layout_marginTop="16dp"/>
-
-</LinearLayout>
+</RelativeLayout>

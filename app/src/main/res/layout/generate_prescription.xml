@@ -1,77 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Título: Generar Receta -->
+        <TextView
+            android:id="@+id/tv_generate_prescription_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generar Receta"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Spinner para seleccionar al paciente -->
         <Spinner
             android:id="@+id/spinner_select_patient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Seleccionar Paciente"/>
+            android:hint="Seleccionar Paciente"
+            android:drawableStart="@drawable/patient"
+            android:drawablePadding="12dp"
+            android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/tv_patient_name"
+        <!-- Nombre del paciente -->
+        <!-- Nombre del paciente -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Nombre: "/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/tv_patient_lastname"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_patient_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <!-- Apellido del paciente -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Apellido: "/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/tv_patient_cedula"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apellido: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_patient_lastname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <!-- Cédula del paciente -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Cédula: "/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/tv_patient_phone"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cédula: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_patient_cedula"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <!-- Teléfono del paciente -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Teléfono: "/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/tv_patient_email"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teléfono: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_patient_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <!-- Correo del paciente -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Correo: "/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <Button
-            android:id="@+id/btn_select_drug"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correo: "
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_patient_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccionar Medicamento"
-            android:layout_marginTop="16dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
 
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_select_drug" />
+
+            <Button
+                android:id="@+id/btn_select_drug"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Seleccionar Medicamento"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <!-- RecyclerView para medicamentos seleccionados -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_selected_drugs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
-        <Button
-            android:id="@+id/btn_submit_prescription"
+        <!-- Botón para generar receta -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generar Receta"
-            android:layout_marginTop="16dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
 
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/prescription" />
 
+            <Button
+                android:id="@+id/btn_submit_prescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Generar Receta"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
     </LinearLayout>
-
 </ScrollView>

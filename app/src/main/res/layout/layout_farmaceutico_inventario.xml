@@ -5,13 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FarmaceuticoInventarioActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         android:orientation="vertical">
 
+        <!-- Title: Editar Fármaco -->
+        <TextView
+            android:id="@+id/tv_editar_farmaco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editar Fármaco"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center"/>
+
         <!-- Campo para ingresar el nombre del medicamento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre del medicamento:"/>
+
         <EditText
             android:id="@+id/et_nombre_medicamento"
             android:layout_width="match_parent"
@@ -20,6 +37,11 @@
             android:inputType="text" />
 
         <!-- Campo para ingresar la cantidad del medicamento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cantidad:"/>
+
         <EditText
             android:id="@+id/et_cantidad_medicamento"
             android:layout_width="match_parent"
@@ -28,6 +50,11 @@
             android:inputType="number" />
 
         <!-- Campo para ingresar la concentración del medicamento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Concentración:"/>
+
         <EditText
             android:id="@+id/et_concentracion"
             android:layout_width="match_parent"
@@ -36,13 +63,16 @@
             android:inputType="text" />
 
         <!-- Spinner para mostrar el proveedor -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proveedor:"/>
+
         <Spinner
             android:id="@+id/spinner_proveedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
-
-
 
         <!-- Botón para guardar -->
         <Button
@@ -52,7 +82,5 @@
             android:text="Guardar"
             android:layout_marginTop="16dp" />
 
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

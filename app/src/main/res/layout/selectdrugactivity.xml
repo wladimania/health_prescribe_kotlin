@@ -11,6 +11,17 @@
         android:padding="8dp"
         android:id="@+id/drugsContainer">
 
+        <!-- Título para el inventario de medicamentos -->
+        <TextView
+            android:id="@+id/tv_inventory_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inventario de Medicamentos"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"/>
+
         <!-- Aquí van las tarjetas de medicamentos seleccionados -->
 
     </LinearLayout>
