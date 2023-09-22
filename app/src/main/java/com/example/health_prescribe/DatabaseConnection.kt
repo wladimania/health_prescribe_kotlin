@@ -17,9 +17,9 @@ import java.sql.Statement
 
 object DatabaseConnection {
 
-    private const val url = "jdbc:postgresql://ec2-34-236-103-63.compute-1.amazonaws.com:5432/d4bjp7o7u52u2c?sslmode=require"
-    private const val user = "nsmeftojowgipm"
-    private const val password = "085ba15094f2c7192906a4a39189bff04f45c73deb010b8524ea645080a1bf4f"
+    private const val url = "jdbc:postgresql://ec2-34-202-53-101.compute-1.amazonaws.com:5432/d39ljtg5nn3bvr?sslmode=require"
+    private const val user = "dnspdplhkzkedv"
+    private const val password = "4e6a1ef6e41639e819361f97326d377bf9c7ca30e585325e15585adecdc5bc3f"
 
     init {
         try {

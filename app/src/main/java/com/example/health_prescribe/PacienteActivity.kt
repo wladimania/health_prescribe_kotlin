@@ -21,7 +21,7 @@ class PacienteActivity : AppCompatActivity() {
         val btnViewPrescriptions = findViewById<Button>(R.id.btn_view_prescriptions_patient)
         btnViewPrescriptions.setOnClickListener {
             val intent = Intent(this, ListadoRecetasMedicoActivity::class.java)
-            intent.putExtra("pacienteId", idPersona)
+            intent.putExtra("id_persona", idPersona)
             startActivity(intent)
         }
 

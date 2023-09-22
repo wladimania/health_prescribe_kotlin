@@ -15,9 +15,9 @@ class ListadoRecetasMedicoActivity : AppCompatActivity() {
         setContentView(R.layout.layout_listado_recetas_medico)
 
         val medicoId = intent.getIntExtra("medicoId", -1)
-        val pacienteId = intent.getIntExtra("pacienteId", -1)
+        val id_persona = intent.getIntExtra("id_persona", -1)
 
-        FetchRecetasTask(medicoId, pacienteId) { recetas ->
+        FetchRecetasTask(medicoId, id_persona) { recetas ->
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_recetas_medico)
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = RecetasMedicoAdapter(recetas)
@@ -51,28 +51,35 @@ class ListadoRecetasMedicoActivity : AppCompatActivity() {
         persona p ON c.id_persona = p.id_persona 
     WHERE 
         r.id_medico = $medicoId
+        AND r.fecha_create IS NOT NULL
+ORDER BY
+    r.fecha_create DESC;
     """
         } else if (pacienteId != -1) {
             """
-    SELECT 
-        r.id_receta, 
-        r.id_medico, 
-        r.id_paciente, 
-        r.estado, 
-        r.id_farmaceutico, 
-        r.codigo_receta, 
-        r.create_asistido, 
-        r.fecha_create, 
-        r.fecha_entrega,
-        CONCAT(p.nombre, ' ', p.apellido) AS nombreApellido
-    FROM 
-        receta r 
-    JOIN 
-        cliente c ON r.id_paciente = c.id_cliente 
-    JOIN 
-        persona p ON c.id_persona = p.id_persona 
-    WHERE 
-        r.id_paciente = $pacienteId
+    SELECT
+    r.id_receta,
+    r.id_medico,
+    r.id_paciente,
+    r.estado,
+    r.id_farmaceutico,
+    r.codigo_receta,
+    r.create_asistido,
+    r.fecha_create,
+    r.fecha_entrega,
+    CONCAT(p.nombre, ' ', p.apellido) AS nombreApellido,
+    p.id_persona
+FROM
+    receta r
+JOIN
+    cliente c ON r.id_paciente = c.id_cliente
+JOIN
+    persona p ON c.id_persona = p.id_persona
+WHERE
+    p.id_persona = $pacienteId
+    AND r.fecha_create IS NOT NULL
+ORDER BY
+    r.fecha_create DESC;
     """
         } else {
             throw IllegalArgumentException("No se proporcionó un ID válido para médico o paciente.")
