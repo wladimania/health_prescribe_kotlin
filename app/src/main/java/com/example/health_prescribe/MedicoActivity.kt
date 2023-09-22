@@ -29,12 +29,18 @@ class MedicoActivity : AppCompatActivity() {
         tvDoctorName.text = "Dr. $firstName $lastName"
         tvDoctorSpecialty.text = "Especialidad: $specialty"
 
-        // Botón para generar receta
+// Botón para generar receta
         val btnGeneratePrescription = findViewById<Button>(R.id.btn_generate_prescription)
         btnGeneratePrescription.setOnClickListener {
-            val intent = Intent(this, GeneratePrescriptionActivity::class.java)
+            val intent = Intent(this, GeneratePrescriptionActivity::class.java).apply {
+                putExtra("firstName", firstName)
+                putExtra("lastName", lastName)
+                putExtra("specialty", specialty)
+                putExtra("medicoId", medicoId)
+            }
             startActivity(intent)
         }
+
 
         // Botón para visualizar mis recetas
         val btnViewPrescriptions = findViewById<Button>(R.id.btn_view_prescriptions)

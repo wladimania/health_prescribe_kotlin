@@ -24,9 +24,7 @@
         <activity
             android:name=".SelectDrugActivity"
             android:exported="false" />
-        <activity
-            android:name=".ViewPrescriptionsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".GeneratePrescriptionActivity"
             android:exported="false" />
@@ -101,9 +99,6 @@
             android:exported="false" />
         <activity
             android:name=".medico_mis_recetasActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MedicoGenerarRecetaActivity"
             android:exported="false" />
         <activity
             android:name=".layout_navbar"

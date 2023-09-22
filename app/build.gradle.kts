@@ -52,6 +52,8 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.5.10")
 
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
 
 

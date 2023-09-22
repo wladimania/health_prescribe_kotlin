@@ -18,6 +18,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private var medicoId: Int = -1
     private var farmaceuticoId: Int = 0
+    var patientDetails: Triple<Int, String, String>? = null  // Añadido para almacenar detalles del paciente
+    var farmaceuticoDetails: Triple<Int, String, String>? = null  // Añadido para almacenar detalles del farmacéutico
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
         override fun doInBackground(vararg params: String?): Pair<usuarios?, Triple<String, String, String>?> {
             var user: usuarios? = null
             var doctorDetails: Triple<String, String, String>? = null
+
 
             try {
                 val username = params[0]
@@ -77,9 +80,9 @@ class LoginActivity : AppCompatActivity() {
                         }
 
                         val doctorSql = """SELECT p.nombre AS firstName, p.apellido AS lastName, m.especializacion AS specialty
-                                       FROM persona p
-                                       JOIN medico m ON p.id_persona = m.id_persona
-                                       WHERE p.id_persona = ? AND m.habilitado = TRUE"""
+                                   FROM persona p
+                                   JOIN medico m ON p.id_persona = m.id_persona
+                                   WHERE p.id_persona = ? AND m.habilitado = TRUE"""
                         val doctorStatement = connection.prepareStatement(doctorSql)
 
                         doctorStatement.setInt(1, idPersona)
@@ -90,10 +93,40 @@ class LoginActivity : AppCompatActivity() {
                                 doctorResultSet.getString("firstName"),
                                 doctorResultSet.getString("lastName"),
                                 doctorResultSet.getString("specialty")
-
                             )
                         }
                     }
+                    // Si el usuario es un paciente, obten sus detalles
+                    if (user.rol == 2) {
+                        val personSql = "SELECT id_persona, nombre, apellido FROM persona WHERE id_persona = ?"
+                        val personStatement = connection.prepareStatement(personSql)
+                        personStatement.setInt(1, user.id_persona)
+
+                        val personResultSet = personStatement.executeQuery()
+                        if (personResultSet.next()) {
+                            patientDetails = Triple(
+                                personResultSet.getInt("id_persona"),
+                                personResultSet.getString("nombre"),
+                                personResultSet.getString("apellido")
+                            )
+                        }
+                    }
+                    // Si el usuario es un farmacéutico, obten sus detalles
+                    if (user.rol == 3) {
+                        val personSql = "SELECT id_persona, nombre, apellido FROM persona WHERE id_persona = ?"
+                        val personStatement = connection.prepareStatement(personSql)
+                        personStatement.setInt(1, user.id_persona)
+
+                        val personResultSet = personStatement.executeQuery()
+                        if (personResultSet.next()) {
+                            farmaceuticoDetails = Triple(
+                                personResultSet.getInt("id_persona"),
+                                personResultSet.getString("nombre"),
+                                personResultSet.getString("apellido")
+                            )
+                        }
+                    }
+
                 }
 
                 // Obtener el ID del médico si el usuario es médico (rol = 1)
@@ -110,13 +143,17 @@ class LoginActivity : AppCompatActivity() {
 
                 // Obtener el ID del farmacéutico si el usuario es farmacéutico (rol = 3)
                 if (user?.rol == 3) {
-                    val farmaceuticoSql = "SELECT id_farmac FROM farmaceutico WHERE id_usuario = ?"
+                    val farmaceuticoSql = "SELECT f.id_farmaceutico\n" +
+                            "FROM farmaceutico f\n" +
+                            "JOIN persona p ON f.id_persona = p.id_persona\n" +
+                            "JOIN usuarios u ON p.id_persona = u.id_persona\n" +
+                            "WHERE u.id_usuario = ?"
                     val farmaceuticoStatement = connection.prepareStatement(farmaceuticoSql)
                     farmaceuticoStatement.setInt(1, user.id_usuario)
 
                     val farmaceuticoResultSet = farmaceuticoStatement.executeQuery()
                     if (farmaceuticoResultSet.next()) {
-                        farmaceuticoId = farmaceuticoResultSet.getInt("id_farmac")
+                        farmaceuticoId = farmaceuticoResultSet.getInt("id_farmaceutico")
                     }
                 }
 
@@ -125,6 +162,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("DB_ERROR", "Error al consultar el usuario", e)
             }
             return Pair(user, doctorDetails)
+
         }
 
         override fun onPostExecute(result: Pair<usuarios?, Triple<String, String, String>?>) {
@@ -147,12 +185,27 @@ class LoginActivity : AppCompatActivity() {
                     }
                     2 -> {
                         Toast.makeText(this@LoginActivity, "Bienvenido Paciente", Toast.LENGTH_LONG).show()
-                        Intent(this@LoginActivity, PacienteActivity::class.java)
+                        Intent(this@LoginActivity, PacienteActivity::class.java).apply {
+                            patientDetails?.let {
+                                putExtra("id_persona", it.first)
+                                putExtra("nombre", it.second)
+                                putExtra("apellido", it.third)
+                            }
+                        }
                     }
+
                     3 -> {
                         Toast.makeText(this@LoginActivity, "Bienvenido Farmacéutico", Toast.LENGTH_LONG).show()
-                        Intent(this@LoginActivity, FarmaceuticoActivity::class.java)
+                        Intent(this@LoginActivity, FarmaceuticoActivity::class.java).apply {
+                            farmaceuticoDetails?.let {
+                                putExtra("id_persona", it.first)
+                                putExtra("nombre", it.second)
+                                putExtra("apellido", it.third)
+                            }
+                            putExtra("farmaceuticoId", farmaceuticoId)  // Pasar el ID del farmacéutico
+                        }
                     }
+
                     4 -> {
                         Toast.makeText(this@LoginActivity, "Bienvenido Admin", Toast.LENGTH_LONG).show()
                         Intent(this@LoginActivity, AdminActivity::class.java)

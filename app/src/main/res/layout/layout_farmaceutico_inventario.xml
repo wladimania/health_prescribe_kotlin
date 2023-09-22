@@ -35,20 +35,23 @@
             android:hint="Concentración"
             android:inputType="text" />
 
-        <!-- Campo para ingresar el laboratorio -->
-        <EditText
-            android:id="@+id/et_laboratorio"
+        <!-- Spinner para mostrar el proveedor -->
+        <Spinner
+            android:id="@+id/spinner_proveedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Laboratorio"
-            android:inputType="text" />
+            android:layout_marginTop="8dp" />
 
-        <!-- Botón para agregar al inventario -->
+
+
+        <!-- Botón para guardar -->
         <Button
+            android:id="@+id/btn_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agregar al inventario"
+            android:text="Guardar"
             android:layout_marginTop="16dp" />
+
 
     </LinearLayout>
 

@@ -5,35 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FarmaceuticoEntregarRecetasActivity">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- Campo para buscar receta por nombre del paciente o código de receta -->
-        <EditText
-            android:id="@+id/et_buscar_receta"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Buscar receta..."
-            android:inputType="text" />
+            android:padding="16dp"
+            android:orientation="vertical">
 
-        <!-- Botón para validar con huella dactilar -->
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Validar con Huella Dactilar"
-            android:layout_marginTop="16dp" />
+            <!-- Datos del paciente -->
+            <TextView
+                android:id="@+id/tv_paciente_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Datos del Paciente:"
+                android:textStyle="bold" />
 
-        <!-- Listado de recetas pendientes de entrega -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_recetas_pendientes"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp" />
+            <TextView
+                android:id="@+id/tv_paciente_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del paciente: "/>
 
-    </LinearLayout>
 
+            <!-- Datos del médico -->
+            <TextView
+                android:id="@+id/tv_medico_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Datos del Médico:"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/tv_medico_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Médico: " />
+
+            <!-- Datos de la receta (farmacos) -->
+            <TextView
+                android:id="@+id/tv_farmacos_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listado de Fármacos:"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
+
+            <!-- Campo para buscar receta por nombre del paciente o código de receta -->
+            <EditText
+                android:id="@+id/et_buscar_receta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Buscar receta..."
+                android:inputType="text"
+                android:layout_marginTop="16dp" />
+
+            <!-- Botón para validar con huella dactilar -->
+
+            <!-- Listado de recetas pendientes de entrega -->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Validar con Huella Dactilar" />
+
+            <LinearLayout
+                android:id="@+id/ll_farmacos_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Los fármacos serán añadidos aquí dinámicamente en tu código -->
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+
+                    <!-- ... Resto de tu diseño ... -->
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_farmacos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+            </ScrollView>
+
+
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

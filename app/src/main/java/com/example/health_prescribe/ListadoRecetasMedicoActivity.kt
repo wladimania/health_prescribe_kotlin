@@ -15,41 +15,71 @@ class ListadoRecetasMedicoActivity : AppCompatActivity() {
         setContentView(R.layout.layout_listado_recetas_medico)
 
         val medicoId = intent.getIntExtra("medicoId", -1)
+        val pacienteId = intent.getIntExtra("pacienteId", -1)
 
-        FetchRecetasTask(medicoId) { recetas ->
+        FetchRecetasTask(medicoId, pacienteId) { recetas ->
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_recetas_medico)
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = RecetasMedicoAdapter(recetas)
             Log.d("ListadoRecetasMedico", "Número de recetas en la actividad: ${recetas.size}")
         }.execute()
-
     }
 
-    private fun fetchRecetasFromDB(medicoId: Int): List<recetas> {
+    private fun fetchRecetasFromDB(medicoId: Int, pacienteId: Int): List<recetas> {
         val recetasList = mutableListOf<recetas>()
         val connection = DatabaseConnection.getConnection()
         val statement = connection?.createStatement()
-        val resultSet = statement?.executeQuery("""
-        SELECT 
-    r.id_receta, 
-    r.id_medico, 
-    r.id_paciente, 
-    r.estado, 
-    r.id_farmaceutico, 
-    r.codigo_receta, 
-    r.create_asistido, 
-    r.fecha_create, 
-    r.fecha_entrega,
-    CONCAT(p.nombre, ' ', p.apellido) AS nombreApellido
-FROM 
-    receta r 
-JOIN 
-    cliente c ON r.id_paciente = c.id_cliente 
-JOIN 
-    persona p ON c.id_persona = p.id_persona 
-WHERE 
-    r.id_medico = $medicoId
-    """)
+
+        val query: String = if (medicoId != -1) {
+            """
+    SELECT 
+        r.id_receta, 
+        r.id_medico, 
+        r.id_paciente, 
+        r.estado, 
+        r.id_farmaceutico, 
+        r.codigo_receta, 
+        r.create_asistido, 
+        r.fecha_create, 
+        r.fecha_entrega,
+        CONCAT(p.nombre, ' ', p.apellido) AS nombreApellido
+    FROM 
+        receta r 
+    JOIN 
+        cliente c ON r.id_paciente = c.id_cliente 
+    JOIN 
+        persona p ON c.id_persona = p.id_persona 
+    WHERE 
+        r.id_medico = $medicoId
+    """
+        } else if (pacienteId != -1) {
+            """
+    SELECT 
+        r.id_receta, 
+        r.id_medico, 
+        r.id_paciente, 
+        r.estado, 
+        r.id_farmaceutico, 
+        r.codigo_receta, 
+        r.create_asistido, 
+        r.fecha_create, 
+        r.fecha_entrega,
+        CONCAT(p.nombre, ' ', p.apellido) AS nombreApellido
+    FROM 
+        receta r 
+    JOIN 
+        cliente c ON r.id_paciente = c.id_cliente 
+    JOIN 
+        persona p ON c.id_persona = p.id_persona 
+    WHERE 
+        r.id_paciente = $pacienteId
+    """
+        } else {
+            throw IllegalArgumentException("No se proporcionó un ID válido para médico o paciente.")
+        }
+
+
+        val resultSet = statement?.executeQuery(query)
 
         if (resultSet != null) {
             while (resultSet.next()) {
@@ -68,16 +98,21 @@ WHERE
                 recetasList.add(recetaItem)
             }
         }
+
         connection?.close()
         return recetasList
     }
 
+    private inner class FetchRecetasTask(
+        private val medicoId: Int,
+        private val pacienteId: Int,
+        private val onResult: (List<recetas>) -> Unit
+    ) : AsyncTask<Void, Void, List<recetas>>() {
 
-
-    private inner class FetchRecetasTask(private val medicoId: Int, private val onResult: (List<recetas>) -> Unit) : AsyncTask<Void, Void, List<recetas>>() {
         override fun doInBackground(vararg params: Void?): List<recetas> {
-            return fetchRecetasFromDB(medicoId)
+            return fetchRecetasFromDB(medicoId, pacienteId)
         }
+
         override fun onPostExecute(result: List<recetas>) {
             onResult(result)
         }
