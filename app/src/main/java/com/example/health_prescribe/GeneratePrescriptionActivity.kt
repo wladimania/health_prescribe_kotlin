@@ -3,11 +3,14 @@ package com.example.health_prescribe
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.health_prescribe.model.PacienteDetalle
@@ -16,6 +19,7 @@ import com.example.health_prescribe.model.receta
 import com.example.health_prescribe.model.receta_listado
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.concurrent.Executor
 
 class GeneratePrescriptionActivity : AppCompatActivity() {
     private lateinit var tv_patient_name: TextView
@@ -37,14 +41,39 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
     val fechaFormateada = formatoFecha.format(fechaActual)
     private val dosisList: MutableList<String> = mutableListOf()
     private val aplicacionList: MutableList<String> = mutableListOf()
+    private var fingerprintData: ByteArray? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         fun fetchPatients() {
             // Realizar la tarea de carga de pacientes en segundo plano utilizando AsyncTask
             FetchPatientsTask().execute()
         }
+        val executor: Executor = ContextCompat.getMainExecutor(this)
+
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.generate_prescription) // Asegúrate de que el nombre sea el correcto
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                fingerprintData = byteArrayOf()  // (tu implementación aquí)
+
+                DatabaseConnection.updateFingerprintAsync(
+                    selectedPatients?.id_cliente ?: 0,
+                    fingerprintData ?: byteArrayOf()
+                ) { success ->
+                    if (success) {
+                        Log.d("BiometricAuth", "Huella dactilar actualizada exitosamente.")
+                    } else {
+                        Log.d("BiometricAuth", "Fallo al actualizar huella dactilar.")
+                    }
+                }
+            }
+        }
+
+            val biometricPrompt = BiometricPrompt(this, executor, callback)
         tv_patient_name = findViewById(R.id.tv_patient_name)
         tv_patient_lastname = findViewById(R.id.tv_patient_lastname)
         tv_patient_cedula = findViewById(R.id.tv_patient_cedula)
@@ -74,13 +103,28 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_SELECT_DRUG)
         }
         btnSubmitPrescription.setOnClickListener {
+
             // Verifica que se haya seleccionado un paciente
             if (selectedPatients != null) {
                 // Valida que al menos se haya seleccionado un medicamento
                 if (selectedDrugs.isEmpty()) {
                     Toast.makeText(this, "Por favor, seleccione al menos un medicamento", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
+                } // Verifica que el paciente tenga una huella dactilar registrada
+                if (selectedPatients?.huellaDactilar is ByteArray && (selectedPatients?.huellaDactilar as ByteArray).isEmpty()) {
+                    // Aquí, abrirás un diálogo para la autenticación biométrica y guardas la huella digital.
+                    val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                        .setTitle("Registrar huella dactilar")
+                        .setSubtitle("Por favor, siga las instrucciones para registrar su huella dactilar.")
+                        .setNegativeButtonText("Cancelar")
+                        .build()
+                    biometricPrompt.authenticate(promptInfo)
+
+                    // Suponiendo que tienes una variable `fingerprintData` que almacena la huella dactilar
+                   // DatabaseConnection.updateFingerprint(selectedPatients?.id_cliente ?: 0, fingerprintData ?: byteArrayOf())
+                    return@setOnClickListener
                 }
+
                 // Valida que se haya ingresado una cantidad y descripción para cada medicamento
                 val dosisEditText = findViewById<EditText>(R.id.et_quantity)
                 val aplicacionEditText = findViewById<EditText>(R.id.et_prescription)
@@ -219,6 +263,7 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
         override fun onPostExecute(result: Boolean) {
             if (result) {
                 // Si la receta se guarda con éxito, muestra un mensaje de éxito
+
                 Toast.makeText(this@GeneratePrescriptionActivity, "Receta guardada con éxito", Toast.LENGTH_SHORT).show()
             } else {
                 // Si hay un error al guardar la receta, muestra un mensaje de error

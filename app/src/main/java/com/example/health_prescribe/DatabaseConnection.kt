@@ -1,5 +1,6 @@
 package com.example.health_prescribe
 
+import android.os.AsyncTask
 import android.util.Log
 import com.example.health_prescribe.model.PacienteDetalle
 import com.example.health_prescribe.model.farmaceutico
@@ -14,6 +15,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
+import java.util.Base64
 
 object DatabaseConnection {
 
@@ -448,6 +450,36 @@ object DatabaseConnection {
         return rowsAffected == 1
     }
 
+    fun updateFingerprint(idCliente: Int, huellaDactilar: ByteArray): Boolean {
+        val connection = getConnection()
+        var rowsUpdated = 0
+        Log.d("updateFingerprint", "Valor de huellaDactilar en Base64: ${Base64.getEncoder().encodeToString(huellaDactilar)}")
+
+        try {
+            val query = """
+            UPDATE cliente
+            SET huellaDactilar = ?
+            WHERE id_cliente = ?
+        """
+
+            val preparedStatement = connection?.prepareStatement(query)
+            preparedStatement?.setBytes(1, huellaDactilar)
+            preparedStatement?.setInt(2, idCliente)
+            rowsUpdated = preparedStatement?.executeUpdate() ?: 0
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        } finally {
+            connection?.close()
+        }
+
+        return rowsUpdated == 1
+    }
+    fun updateFingerprintAsync(idCliente: Int, huellaDactilar: ByteArray, callback: (Boolean) -> Unit) {
+        AsyncTask.execute {
+            val result = updateFingerprint(idCliente, huellaDactilar)
+            callback(result)
+        }
+    }
 }
 
 

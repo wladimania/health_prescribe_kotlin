@@ -7,4 +7,5 @@ data class persona (
     val cedula: String,
     val rol: Int,
     val habilitado: Boolean
+
 )

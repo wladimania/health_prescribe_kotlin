@@ -48,7 +48,8 @@ dependencies {
 
     // JDBC para PostgreSQL
     implementation ("org.postgresql:postgresql:42.2.5")
-    implementation ("androidx.biometric:biometric:1.0.1")
+    implementation ("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.5.10")
 
