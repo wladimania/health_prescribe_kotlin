@@ -494,6 +494,7 @@ object DatabaseConnection {
             }
         }
     }
+
     fun updateRecetaEstadoYFarmaceutico(idReceta: Int, nuevoEstado: String, idFarmaceutico: Int): Boolean {
         val connection = getConnection()
         val statement = connection?.createStatement()

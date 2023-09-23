@@ -10,6 +10,8 @@ import com.example.health_prescribe.model.FarmacoDisplay
 
 class FarmacoAdapter(private val farmacos: MutableList<FarmacoDisplay>) : RecyclerView.Adapter<FarmacoAdapter.ViewHolder>() {
 
+    private lateinit var farmacosAdapter: FarmacoAdapter
+    private val farmacosList = mutableListOf<FarmacoDisplay>()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvNombre: TextView = itemView.findViewById(R.id.tv_nombre_farmaco)
         val tvCantidad: TextView = itemView.findViewById(R.id.tv_cantidad)

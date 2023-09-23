@@ -20,7 +20,7 @@ class ListadoRecetasMedicoActivity : AppCompatActivity() {
         FetchRecetasTask(medicoId, id_persona) { recetas ->
             val recyclerView = findViewById<RecyclerView>(R.id.recycler_recetas_medico)
             recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = RecetasMedicoAdapter(recetas) // Asumiendo que tu adaptador se llama RecetasMedicoAdapter
+            recyclerView.adapter = RecetasMedicoAdapter(this, recetas, medicoId, id_persona)  // Añade los IDs aquí
             Log.d("ListadoRecetasMedico", "Número de recetas en la actividad: ${recetas.size}")
         }.execute()
     }

@@ -4,21 +4,27 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-feature android:name="android.hardware.fingerprint" android:required="true"/>
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Health_prescribe"
-        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+        <activity
+            android:name=".DetalleRecetaActivity"
+            android:exported="false" />
         <activity
             android:name=".SelectDrugItemSelectActivity"
             android:exported="false" />
@@ -28,7 +34,6 @@
         <activity
             android:name=".SelectDrugActivity"
             android:exported="false" />
-
         <activity
             android:name=".GeneratePrescriptionActivity"
             android:exported="false" />
