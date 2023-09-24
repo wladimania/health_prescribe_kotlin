@@ -1,5 +1,6 @@
 package com.example.health_prescribe
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,11 @@ import com.example.health_prescribe.model.FarmacoDisplay
 import com.example.health_prescribe.model.farmaco
 import com.example.health_prescribe.model.receta_listado
 import kotlinx.coroutines.*
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import java.util.concurrent.Executor
+
 
 class FarmaceuticoEntregarRecetasActivity : AppCompatActivity() {
     private val farmacosList = mutableListOf<receta_listado>()
@@ -60,7 +66,46 @@ class FarmaceuticoEntregarRecetasActivity : AppCompatActivity() {
         btn_entregar_receta.setOnClickListener {
             entregarReceta()
         }
+
+        /**
+         *
+         */
+        // Dentro de un método onClick o similar
+        mostrarDialogoAutenticacionBiometrica()
     }
+
+    fun mostrarDialogoAutenticacionBiometrica() {
+        val executor: Executor = ContextCompat.getMainExecutor(this)
+
+        val biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    // Manejar errores de autenticación
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    // Autenticación exitosa, realiza las acciones necesarias aquí
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    // Autenticación fallida
+                }
+            })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Autenticación Biométrica")
+            .setSubtitle("Utiliza tu huella digital para autenticarte")
+            .setNegativeButtonText("Cancelar")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
+    }
+
+
+
     private fun transformToDisplay(list: List<receta_listado>, farmacos: List<farmaco>): List<FarmacoDisplay> {
         return list.map { item ->
             val farmacoInfo = farmacos.find { it.id_farmaco == item.id_farmaco }

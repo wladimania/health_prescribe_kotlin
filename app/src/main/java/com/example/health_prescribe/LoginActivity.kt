@@ -2,14 +2,20 @@ package com.example.health_prescribe
 
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
+import android.security.identity.IdentityCredential
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import com.example.health_prescribe.model.usuarios
 import java.sql.PreparedStatement
+import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,9 +41,63 @@ class LoginActivity : AppCompatActivity() {
     private fun loginUser() {
         val username = etUsername.text.toString().trim()
         val password = etPassword.text.toString().trim()
-
-        LoginTask().execute(username, password)
+        /**
+         *
+         */
+        // Dentro de un método onClick o similar
+        mostrarDialogoAutenticacionBiometrica()
+        //LoginTask().execute(username, password)
     }
+
+    fun mostrarDialogoAutenticacionBiometrica() {
+        val executor: Executor = ContextCompat.getMainExecutor(this)
+
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+            val biometricPrompt = BiometricPrompt(this, executor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+                        // Manejar errores de autenticación
+                        Toast.makeText(this@LoginActivity, "MUESTRATE onAuthenticationError", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        // Autenticación exitosa, realiza las acciones necesarias aquí
+                        Toast.makeText(this@LoginActivity, "MUESTRATE onAuthenticationSucceeded", Toast.LENGTH_LONG).show()
+                        val cryptoObject = result.cryptoObject
+
+                        // Obtener el byte[] de la huella digital
+                        if (Build.VERSION.SDK_INT >= 13) {
+//                            cryptoObject?.signature?.sign()
+                            // se supone que aqui está
+                            val identityCredential = cryptoObject?.identityCredential;
+
+                        } else {
+                        }
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                        // Autenticación fallida
+                        Toast.makeText(this@LoginActivity, "MUESTRATE onAuthenticationFailed", Toast.LENGTH_LONG).show()
+                    }
+                })
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Autenticación Biométrica")
+                .setSubtitle("Utiliza tu huella digital para autenticarte")
+                .setNegativeButtonText("Cancelar")
+                .build()
+
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            Toast.makeText(this, "La autenticación biométrica no está disponible en este dispositivo", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     inner class LoginTask : AsyncTask<String, Void, Pair<usuarios?, Triple<String, String, String>?>>() {
 
