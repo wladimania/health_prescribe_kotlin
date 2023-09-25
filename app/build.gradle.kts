@@ -60,4 +60,6 @@ dependencies {
     implementation ("com.google.android.material:material:<latest_version>")
     implementation ("com.google.android.material:material:1.5.0")
 
+    implementation ("org.bouncycastle:bcprov-jdk15on:1.68")
+
 }
