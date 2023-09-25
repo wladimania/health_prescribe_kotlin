@@ -11,17 +11,69 @@
         android:padding="16dp"
         android:gravity="center"
         android:orientation="vertical">
+        <EditText
+            android:id="@+id/editLog"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_x="17dp"
+            android:layout_y="671dp"
+            android:autoText="true"
+            android:bufferType="normal"
+            android:clickable="false"
+            android:editable="false"
+            android:enabled="true"
+            android:fadeScrollbars="false"
+            android:freezesText="false"
+            android:inputType="none|textMultiLine"
+            android:isScrollContainer="true"
+            android:linksClickable="true"
+            android:longClickable="false"
+            android:saveEnabled="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            android:scrollHorizontally="true"
+            android:shadowColor="#251111"
+            android:textIsSelectable="false"
+            android:textSize="14sp"
+            android:text="Dispositivo desconectado"
+            android:verticalScrollbarPosition="right"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:visibility="visible" />
+        <ImageView
+            android:id="@+id/imageViewVerify"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:src="@drawable/prescription"></ImageView>
+        <ImageView
+            android:id="@+id/imageViewRegister"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:src="@drawable/prescription"></ImageView>
 
         <!-- Indicaciones -->
         <TextView
-            android:id="@+id/tv_validar_receta"
+            android:id="@+id/textViewResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Por favor, pide al paciente que coloque su huella dactilar para validar la receta." />
 
         <!-- Botón para iniciar la validación -->
         <Button
-            android:id="@+id/btn_iniciar_validacion"
+            android:id="@+id/buttonRegisterAutoOn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_marginTop="16dp" />
+        <Button
+            android:id="@+id/buttonVerifyAutoOn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Iniciar validación"

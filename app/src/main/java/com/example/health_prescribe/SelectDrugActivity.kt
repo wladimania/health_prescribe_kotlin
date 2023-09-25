@@ -29,16 +29,16 @@ class SelectDrugActivity : AppCompatActivity() {
             val drugView = LayoutInflater.from(this).inflate(R.layout.drug_item, null)
 
             val drugNameView = drugView.findViewById<TextView>(R.id.tv_drug_name)
-            drugNameView.text = "Nombre del medicamento: ${drug.nombre_generico}"
+            drugNameView.text = "          ${drug.nombre_generico}"
 
             val drugConcentrationView = drugView.findViewById<TextView>(R.id.tv_drug_concentration)
-            drugConcentrationView.text = "Concentración del medicamento: ${drug.concentracion}"
+            drugConcentrationView.text = "          ${drug.concentracion}"
 
             val drugLabView = drugView.findViewById<TextView>(R.id.tv_drug_lab)
-            drugLabView.text = "Cantidad en inventario: ${drug.inventario}"
+            drugLabView.text = "          ${drug.inventario}"
 
             val drugProviderView = drugView.findViewById<TextView>(R.id.tv_drug_provider)
-            drugProviderView.text = "Nombre del proveedor: ${drug.proveedor.nombre_proveedor}"
+            drugProviderView.text = "          ${drug.proveedor.nombre_proveedor}"
 
             drugView.setOnClickListener {
                 if (idFarmaceutico != -1) {

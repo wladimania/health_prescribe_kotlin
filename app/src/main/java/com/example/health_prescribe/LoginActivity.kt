@@ -45,9 +45,10 @@ class LoginActivity : AppCompatActivity() {
         /**
          *
          */
+        LoginTask().execute(username, password)
         // Dentro de un método onClick o similar
-        mostrarDialogoAutenticacionBiometrica()
-        //LoginTask().execute(username, password)
+        //mostrarDialogoAutenticacionBiometrica()
+
     }
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
@@ -58,8 +59,8 @@ class LoginActivity : AppCompatActivity() {
         return fingerprint.getFingerprint()
     }
 
-    // Función para mostrar el diálogo de autenticación biométrica
-    fun mostrarDialogoAutenticacionBiometrica() {
+        // Función para mostrar el diálogo de autenticación biométrica
+        fun mostrarDialogoAutenticacionBiometrica() {
         val executor: Executor = ContextCompat.getMainExecutor(this)
 
         // Generar la huella criptográfica antes de la autenticación
@@ -81,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
                     super.onAuthenticationSucceeded(result)
                     println("Cryptographic Fingerprint Autenticación exitosa!: ${cryptographicFingerprint.joinToString("") { "%02x".format(it) }}")
                     Toast.makeText(applicationContext, "Autenticación exitosa!", Toast.LENGTH_SHORT).show()
-                    
+
                 }
 
                 override fun onAuthenticationFailed() {

@@ -9,6 +9,7 @@ import SecuGen.FDxSDKPro.SGFDxSecurityLevel
 import SecuGen.FDxSDKPro.SGFDxTemplateFormat
 import SecuGen.FDxSDKPro.SGFingerInfo
 import SecuGen.FDxSDKPro.SGImpressionType
+import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -25,6 +26,7 @@ import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -38,12 +40,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.health_prescribe.databinding.ActivityPruebaBinding
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 
-
-class ValidarRecetaActivity : AppCompatActivity() {
+public class prueba : AppCompatActivity() {
     private val TAG = "SecuGen USB"
     private val IMAGE_CAPTURE_TIMEOUT_MS = 10000
     private val IMAGE_CAPTURE_QUALITY = 50
@@ -90,6 +96,10 @@ class ValidarRecetaActivity : AppCompatActivity() {
     private var mFakeDetectionLevel = 1
     private var mensaje: TextView? = null
 
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityPruebaBinding
+
     private fun debugMessage(message: String) {
         mEditLog!!.append(message)
         mEditLog!!.invalidate() //TODO trying to get Edit log to update after each line written
@@ -105,37 +115,37 @@ class ValidarRecetaActivity : AppCompatActivity() {
             //Log.d(TAG,"Enter mUsbReceiver.onReceive()");
             if (ACTION_USB_PERMISSION == action) {
                 synchronized(this) {
-                    val device =
-                        intent.getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice?
+                    var device: UsbDevice? = null
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                        device =
+                            intent.getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice?
+                    }
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (device != null) {
                             //DEBUG Log.d(TAG, "Vendor ID : " + device.getVendorId() + "\n");
                             //DEBUG Log.d(TAG, "Product ID: " + device.getProductId() + "\n");
-                            debugMessage(
-                                """
-                                USB BroadcastReceiver VID : ${device.vendorId}
-                                
-                                """.trimIndent()
-                            )
-                            debugMessage(
-                                """
-                                USB BroadcastReceiver PID: ${device.productId}
-                                
-                                """.trimIndent()
-                            )
-                        } else Log.e(
-                            "mUsbReceiver.onReceive() Device is null" ,
-                            "mUsbReceiver.onReceive() Device is null"
-                        )
-                    } else Log.e(
-                        "mUsbReceiver.onReceive() Device is null",
-                        "mUsbReceiver.onReceive() permission denied for device $device"
-                    )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                                debugMessage(
+                                    """
+                                    USB BroadcastReceiver VID : ${device.vendorId}
+                                    
+                                    """.trimIndent()
+                                )
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                                debugMessage(
+                                    """
+                                    USB BroadcastReceiver PID: ${device.productId}
+                                    
+                                    """.trimIndent()
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
 
     var fingerDetectedHandler: Handler = object : Handler() {
         // @Override
@@ -151,30 +161,40 @@ class ValidarRecetaActivity : AppCompatActivity() {
         }
     }
 
-
-    @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_validar_receta)
+
+        binding = ActivityPruebaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+        val navController = findNavController(R.id.nav_host_fragment_content_prueba)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+
 
         mButtonRegisterAutoOn = findViewById<View>(R.id.buttonRegisterAutoOn) as Button
-        mButtonRegisterAutoOn!!.setOnClickListener({})
+        mButtonRegisterAutoOn!!.setOnClickListener(this)
         mButtonMatchAutoOn = findViewById<View>(R.id.buttonVerifyAutoOn) as Button
-        mButtonMatchAutoOn!!.setOnClickListener({})
+        mButtonMatchAutoOn!!.setOnClickListener(this)
         mEditLog = findViewById<View>(R.id.editLog) as EditText
         mTextViewResult = findViewById<View>(R.id.textViewResult) as TextView
-       // mCheckBoxMatched = findViewById<View>(R.id.checkBoxMatched) as CheckBox
+        mCheckBoxMatched = findViewById<View>(R.id.checkBoxMatched) as CheckBox
         mImageViewRegister = findViewById<View>(R.id.imageViewRegister) as ImageView
         mImageViewVerify = findViewById<View>(R.id.imageViewVerify) as ImageView
         mNumFakeThresholds = IntArray(1)
         mDefaultFakeThreshold = IntArray(1)
         mFakeEngineReady = BooleanArray(1)
-        // mensaje = findViewById<View>(R.id.textViewResultdos) as TextView
+        mensaje = findViewById<View>(R.id.textViewResultdos) as TextView
         // perform seek bar change listener event used for getting the progress value
         // perform seek bar change listener event used for getting the progress value
         grayBuffer =
             IntArray(JSGFPLib.MAX_IMAGE_WIDTH_ALL_DEVICES * JSGFPLib.MAX_IMAGE_HEIGHT_ALL_DEVICES)
-        for (i in grayBuffer!!.indices) grayBuffer!![i] = Color.GRAY
+        for (i in grayBuffer!!.indices) {
+           // grayBuffer!!.get(i) = Color.GRAY
+        }
         grayBitmap = Bitmap.createBitmap(
             JSGFPLib.MAX_IMAGE_WIDTH_ALL_DEVICES,
             JSGFPLib.MAX_IMAGE_HEIGHT_ALL_DEVICES,
@@ -217,7 +237,9 @@ class ValidarRecetaActivity : AppCompatActivity() {
             Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE
         )
         filter = IntentFilter(ACTION_USB_PERMISSION)
-        sgfplib = JSGFPLib(this, getSystemService(USB_SERVICE) as UsbManager)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            sgfplib = JSGFPLib(this, getSystemService(USB_SERVICE) as UsbManager)
+        }
         bSecuGenDeviceOpened = false
         usbPermissionRequested = false
         debugMessage("Starting Activity\n")
@@ -228,13 +250,21 @@ class ValidarRecetaActivity : AppCompatActivity() {
                 """.trimIndent()
         )
         mAutoOnEnabled = false
-       // autoOn = SGAutoOnEventNotifier(sgfplib, this)
+        autoOn = SGAutoOnEventNotifier(sgfplib!!, this)
         autoOn!!.start()
-
 
 
     }
 
+    private fun SGAutoOnEventNotifier(sgfplib: JSGFPLib, prueba: prueba): SGAutoOnEventNotifier {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_prueba)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
+    }
 
     override fun onPause() {
 
@@ -256,11 +286,10 @@ class ValidarRecetaActivity : AppCompatActivity() {
         super.onPause()
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     override fun onResume() {
         super.onResume()
         registerReceiver(mUsbReceiver, filter)
@@ -335,37 +364,35 @@ class ValidarRecetaActivity : AppCompatActivity() {
                         debugMessage("Image resolution: $mImageDPI\n")
                         debugMessage(
                             """
-                            Serial Number: {kotlin.String(deviceInfo.deviceSN())}
+                  
                             
                             """.trimIndent()
                         )
                         error = sgfplib!!.FakeDetectionCheckEngineStatus(mFakeEngineReady)
                         debugMessage(
                             """
-                            Ret[$error] Fake Engine Ready: ${mFakeEngineReady?.get(0)}
+                            Ret[$error] Fake Engine Ready: ${mFakeEngineReady!![0]}
                             
                             """.trimIndent()
                         )
-                        if (mFakeEngineReady?.get(0) == true) {
+                        if (mFakeEngineReady!![0]) {
                             error = sgfplib!!.FakeDetectionGetNumberOfThresholds(mNumFakeThresholds)
                             debugMessage(
                                 """
-                                Ret[$error] Fake Thresholds: ${mNumFakeThresholds?.get(0)}
+                                Ret[$error] Fake Thresholds: ${mNumFakeThresholds!![0]}
                                 
                                 """.trimIndent()
                             )
-                            if (error != SGFDxErrorCode.SGFDX_ERROR_NONE) mNumFakeThresholds?.set(0,
-                                1
-                            ) //0=Off, 1=TouchChip
-                            error =
-                                sgfplib!!.FakeDetectionGetDefaultThreshold(mDefaultFakeThreshold)
+                            if (error != SGFDxErrorCode.SGFDX_ERROR_NONE) mNumFakeThresholds!![0] =
+                                1 //0=Off, 1=TouchChip
+                            error = sgfplib!!.FakeDetectionGetDefaultThreshold(mDefaultFakeThreshold)
                             debugMessage(
                                 """
-                                Ret[$error] Default Fake Threshold: ${mDefaultFakeThreshold?.get(0)}
+                                Ret[$error] Default Fake Threshold: ${mDefaultFakeThreshold!![0]}
                                 
                                 """.trimIndent()
                             )
-                            //mFakeDetectionLevel = mDefaultFakeThreshold?.get(0) ?:
+                            mFakeDetectionLevel = mDefaultFakeThreshold!![0]
                             val thresholdValue = DoubleArray(1)
                             error = sgfplib!!.FakeDetectionGetThresholdValue(thresholdValue)
                             debugMessage(
@@ -375,8 +402,8 @@ class ValidarRecetaActivity : AppCompatActivity() {
                                 """.trimIndent()
                             )
                         } else {
-                            mNumFakeThresholds?.set(0, 1) //0=Off, 1=Touch Chip
-                            mDefaultFakeThreshold?.set(0, 1) //Touch Chip Enabled
+                            mNumFakeThresholds!![0] = 1 //0=Off, 1=Touch Chip
+                            mDefaultFakeThreshold!![0] = 1 //Touch Chip Enabled
                         }
                         sgfplib!!.SetTemplateFormat(SGFDxTemplateFormat.TEMPLATE_FORMAT_ISO19794)
                         sgfplib!!.GetMaxTemplateSize(mMaxTemplateSize)
@@ -399,7 +426,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
     //////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
     override fun onDestroy() {
-
+        Log.d(TAG, "Enter onDestroy()")
         sgfplib!!.CloseDevice()
         mRegisterImage = null
         //mVerifyImage = null;
@@ -407,7 +434,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
         mVerifyTemplate = null
         sgfplib!!.Close()
         super.onDestroy()
-
+        Log.d(TAG, "Exit onDestroy()")
     }
 
     //Converts image to grayscale (NEW)
@@ -420,7 +447,9 @@ class ValidarRecetaActivity : AppCompatActivity() {
             Bits[i * 4 + 3] = -1 // 0xff, that's the alpha.
         }
         val bmpGrayscale = Bitmap.createBitmap(mImageWidth, mImageHeight, Bitmap.Config.ARGB_8888)
-        bmpGrayscale.copyPixelsFromBuffer(ByteBuffer.wrap(Bits))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+            bmpGrayscale.copyPixelsFromBuffer(ByteBuffer.wrap(Bits))
+        }
         return bmpGrayscale
     }
 
@@ -455,7 +484,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
     //////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////este///////////////////////////////////////////////////////////////////////
     fun RegisterFingerPrint() {
         var dwTimeStart: Long = 0
         var dwTimeEnd: Long = 0
@@ -467,8 +496,8 @@ class ValidarRecetaActivity : AppCompatActivity() {
         dwTimeStart = System.currentTimeMillis()
         var result = sgfplib!!.GetImageEx(
             mRegisterImage,
-            IMAGE_CAPTURE_TIMEOUT_MS.toLong(),
-            IMAGE_CAPTURE_QUALITY.toLong()
+           IMAGE_CAPTURE_TIMEOUT_MS.toLong(),
+           IMAGE_CAPTURE_QUALITY.toLong()
         )
         dwTimeEnd = System.currentTimeMillis()
         dwTimeElapsed = dwTimeEnd - dwTimeStart
@@ -488,7 +517,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
         fpInfo.ImageQuality = quality1[0]
         fpInfo.ImpressionType = SGImpressionType.SG_IMPTYPE_LP
         fpInfo.ViewNumber = 1
-        for (i in mRegisterTemplate?.indices!!) mRegisterTemplate?.set(i, 0)
+        for (i in mRegisterTemplate!!.indices) mRegisterTemplate!![i] = 0
         dwTimeStart = System.currentTimeMillis()
         result = sgfplib!!.CreateTemplate(fpInfo, mRegisterImage, mRegisterTemplate)
         tomar_valor = mRegisterTemplate!!
@@ -509,7 +538,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
             )
 
             //mTextViewResult.setText("Fingerprint registered");
-            // mTextViewResult!!.text = kotlin.String(mRegisterImage.toString().toByteArray())
+            mTextViewResult!!.setText("c") ;
         } else {
             mTextViewResult!!.text = "Fingerprint not registered"
         }
@@ -519,7 +548,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////validar/////////////////////////////////////////////////////////////////////
     fun VerifyFingerPrint() {
         val b_ima = mImageViewRegister!!.drawable as BitmapDrawable
         val imagen_Conm = b_ima.bitmap
@@ -539,10 +568,11 @@ class ValidarRecetaActivity : AppCompatActivity() {
         //		mVerifyImage = null;
         mVerifyImage = ByteArray(mImageWidth * mImageHeight)
         dwTimeStart = System.currentTimeMillis()
-         var result = sgfplib!!.GetImageEx(
+        var result = sgfplib!!.GetImageEx(
             mVerifyImage,
-            IMAGE_CAPTURE_TIMEOUT_MS.toLong(), IMAGE_CAPTURE_QUALITY.toLong()
-           )
+            IMAGE_CAPTURE_TIMEOUT_MS.toLong(),
+            IMAGE_CAPTURE_QUALITY.toLong()
+        )
         dwTimeEnd = System.currentTimeMillis()
         dwTimeElapsed = dwTimeEnd - dwTimeStart
         debugMessage(
@@ -565,7 +595,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
         fpInfo.ImageQuality = quality[0]
         fpInfo.ImpressionType = SGImpressionType.SG_IMPTYPE_LP
         fpInfo.ViewNumber = 1
-        for (i in mVerifyTemplate?.indices!!) mVerifyTemplate!![i] = 0
+        for (i in mVerifyTemplate!!.indices) mVerifyTemplate!![i] = 0
         dwTimeStart = System.currentTimeMillis()
         result = sgfplib!!.CreateTemplate(fpInfo, mVerifyImage, mVerifyTemplate)
         dwTimeEnd = System.currentTimeMillis()
@@ -595,10 +625,10 @@ class ValidarRecetaActivity : AppCompatActivity() {
             )
             if (matched!![0]) {
                 mTextViewResult!!.text = "Coincidencia de huellas dactilares!\n"
-                Toast.makeText(this@ValidarRecetaActivity, "Verificado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@prueba, "Verificado", Toast.LENGTH_SHORT).show()
             } else {
                 mTextViewResult!!.text = "Fingerprint not matched!"
-                Toast.makeText(this@ValidarRecetaActivity, "nada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@prueba, "nada", Toast.LENGTH_SHORT).show()
             }
             matched = null
         } else mTextViewResult!!.text = "Fingerprint template extraction failed."
@@ -630,6 +660,8 @@ class ValidarRecetaActivity : AppCompatActivity() {
         }
     }
 
+}
 
+private fun Button.setOnClickListener(prueba: prueba) {
 
 }
