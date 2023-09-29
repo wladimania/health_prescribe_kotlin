@@ -1,83 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ValidarRecetaActivity">
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+
         <EditText
             android:id="@+id/editLog"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_x="17dp"
-            android:layout_y="671dp"
+            android:layout_height="119dp"
             android:autoText="true"
-            android:bufferType="normal"
-            android:clickable="false"
-            android:editable="false"
-            android:enabled="true"
-            android:fadeScrollbars="false"
-            android:freezesText="false"
             android:inputType="none|textMultiLine"
-            android:isScrollContainer="true"
-            android:linksClickable="true"
-            android:longClickable="false"
-            android:saveEnabled="false"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbarStyle="outsideInset"
-            android:scrollbars="vertical"
-            android:scrollHorizontally="true"
-            android:shadowColor="#251111"
-            android:textIsSelectable="false"
-            android:textSize="14sp"
-            android:text="Dispositivo desconectado"
-            android:verticalScrollbarPosition="right"
-            android:textStyle="bold"
+            android:text="VALIDACIÓN DE HUELLAS PARA EL PACIENTE "
             android:textAlignment="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
             android:visibility="visible" />
-        <ImageView
-            android:id="@+id/imageViewVerify"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:src="@drawable/prescription"></ImageView>
-        <ImageView
-            android:id="@+id/imageViewRegister"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:src="@drawable/prescription"></ImageView>
 
-        <!-- Indicaciones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <ImageView
+                    android:id="@+id/imageViewRegister"
+                    android:layout_width="117dp"
+                    android:layout_height="106dp"
+                    android:clickable="true"
+                    android:src="@drawable/prescription" />
+
+                <Button
+                    android:id="@+id/buttonVerifyAutoOn"
+                    android:layout_width="117dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Registro" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <ImageView
+                    android:id="@+id/imageViewVerify"
+                    android:layout_width="117dp"
+                    android:layout_height="106dp"
+                    android:clickable="true"
+                    android:src="@drawable/prescription" />
+
+                <Button
+                    android:id="@+id/textViewResultdos"
+                    android:layout_width="117dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Validar Registro" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/textViewResult"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="16dp"
             android:text="Por favor, pide al paciente que coloque su huella dactilar para validar la receta." />
 
-        <!-- Botón para iniciar la validación -->
-        <Button
-            android:id="@+id/buttonRegisterAutoOn"
+        <CheckBox
+            android:id="@+id/checkBoxMatchedValido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1"
-            android:layout_marginTop="16dp" />
-        <Button
-            android:id="@+id/buttonVerifyAutoOn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Iniciar validación"
-            android:layout_marginTop="16dp" />
-    </LinearLayout>
+            android:text="Valiado"
+            android:visibility="invisible"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/textViewResultados"
+            android:layout_width="match_parent"
+            android:layout_height="119dp"
+            android:autoText="true"
+            android:inputType="none|textMultiLine"
+            android:text="Dispositivo: "
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </LinearLayout>
+</RelativeLayout>

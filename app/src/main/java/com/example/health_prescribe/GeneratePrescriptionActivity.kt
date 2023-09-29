@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,17 +87,22 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
 
             // Verifica que se haya seleccionado un paciente
             if (selectedPatients != null) {
+                // Verifica que el campo huellaDactilar tenga datos
+                if (selectedPatients?.huellaDactilar == null || selectedPatients?.huellaDactilar?.isEmpty() == true) {
+                    Toast.makeText(this, "El paciente seleccionado no tiene datos de huella dactilar. Redirigiendo para captura de huella dactilar.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, JSGDActivity::class.java)
+                    intent.putExtra("patientId", selectedPatients?.id_cliente)
+                    startActivity(intent)
+                    return@setOnClickListener
+                }
                 // Valida que al menos se haya seleccionado un medicamento
                 if (selectedDrugs.isEmpty()) {
                     Toast.makeText(this, "Por favor, seleccione al menos un medicamento", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-
-
                 // Valida que se haya ingresado una cantidad y descripción para cada medicamento
                 val dosisEditText = findViewById<EditText>(R.id.et_quantity)
                 val aplicacionEditText = findViewById<EditText>(R.id.et_prescription)
-
                 for (selectedDrug in selectedDrugs) {
                     val dosis = dosisEditText.text.toString().trim()
                     val aplicacion = aplicacionEditText.text.toString().trim()
@@ -143,26 +147,8 @@ class GeneratePrescriptionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, seleccione un paciente", Toast.LENGTH_SHORT).show()
             }
         }
-        val callback = object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                fingerprintData = byteArrayOf()  // (tu implementación aquí)
-
-                DatabaseConnection.updateFingerprintAsync(
-                    selectedPatients?.id_cliente ?: 0,
-                    fingerprintData ?: byteArrayOf()
-                ) { success ->
-                    if (success) {
-                        Log.d("BiometricAuth", "Huella dactilar actualizada exitosamente.")
-                    } else {
-                        Log.d("BiometricAuth", "Fallo al actualizar huella dactilar.")
-                    }
-                }
-            }
-        }
 
 
-        val biometricPrompt = BiometricPrompt(this, executor, callback)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

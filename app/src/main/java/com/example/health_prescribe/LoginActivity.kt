@@ -10,8 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.example.health_prescribe.model.usuarios
 import org.bouncycastle.util.Fingerprint
@@ -50,57 +48,7 @@ class LoginActivity : AppCompatActivity() {
         //mostrarDialogoAutenticacionBiometrica()
 
     }
-    private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
-    // Función para generar la huella criptográfica
-    fun generateCryptographicFingerprint(data: ByteArray): ByteArray {
-        val fingerprint = Fingerprint(data)
-        return fingerprint.getFingerprint()
-    }
-
-        // Función para mostrar el diálogo de autenticación biométrica
-        fun mostrarDialogoAutenticacionBiometrica() {
-        val executor: Executor = ContextCompat.getMainExecutor(this)
-
-        // Generar la huella criptográfica antes de la autenticación
-        val userId = etUsername
-        val someData = "$userId".toByteArray()
-
-        val cryptographicFingerprint = generateCryptographicFingerprint(someData)
-
-        biometricPrompt = BiometricPrompt(this, executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    println("Cryptographic Fingerprint Error de autenticación: ${cryptographicFingerprint.joinToString("") { "%02x".format(it) }}")
-                    Toast.makeText(applicationContext, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
-
-                }
-
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    println("Cryptographic Fingerprint Autenticación exitosa!: ${cryptographicFingerprint.joinToString("") { "%02x".format(it) }}")
-                    Toast.makeText(applicationContext, "Autenticación exitosa!", Toast.LENGTH_SHORT).show()
-
-                }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    println("Cryptographic Fingerprint Autenticación fallida: ${cryptographicFingerprint.joinToString("") { "%02x".format(it) }}")
-                    Toast.makeText(applicationContext, "Autenticación fallida.", Toast.LENGTH_SHORT).show()
-                }
-            })
-
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Autenticación biométrica")
-            .setSubtitle("Inicie sesión usando su huella dactilar")
-            .setNegativeButtonText("Cancelar")
-            .build()
-
-        // Mostrar el diálogo de autenticación biométrica
-        biometricPrompt.authenticate(promptInfo)
-    }
 
 
 

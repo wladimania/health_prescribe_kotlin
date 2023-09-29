@@ -3,27 +3,28 @@ package com.example.health_prescribe
 import android.os.AsyncTask
 import android.util.Log
 import com.example.health_prescribe.model.PacienteDetalle
-import com.example.health_prescribe.model.farmaceutico
 import com.example.health_prescribe.model.farmaco
 import com.example.health_prescribe.model.farmacoCompleto
-import com.example.health_prescribe.model.medico
 import com.example.health_prescribe.model.proveedor
 import com.example.health_prescribe.model.receta
 import com.example.health_prescribe.model.receta_listado
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
-import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.Base64
+
 
 object DatabaseConnection {
-
+    val logger: Logger = LoggerFactory.getLogger(DatabaseConnection::class.java) // Reemplaza YourClassName con el nombre de tu clase
     private const val url = "jdbc:postgresql://ec2-34-202-53-101.compute-1.amazonaws.com:5432/d39ljtg5nn3bvr?sslmode=require"
     private const val user = "dnspdplhkzkedv"
     private const val password = "4e6a1ef6e41639e819361f97326d377bf9c7ca30e585325e15585adecdc5bc3f"
-
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
     init {
         try {
             // Cargar el driver de PostgreSQL
@@ -32,16 +33,76 @@ object DatabaseConnection {
             Log.e("DBConnectionError", "Error al cargar el driver", e)
         }
     }
-
     fun getConnection(): Connection? {
         return try {
             DriverManager.getConnection(url, user, password)
+
         } catch (e: Exception) {
             Log.e("DBConnectionError", "Error al obtener la conexión", e)
-            null
+            return null
         }
     }
 
+    fun getPatientByIdhUELLA(idCliente: Int): PacienteDetalle? {
+        val connection = getConnection()
+        var statement: Statement? = null
+        var paciente: PacienteDetalle? = null
+        try {
+            statement = connection!!.createStatement()
+            val query =
+                "SELECT * FROM cliente INNER JOIN persona ON cliente.id_persona = persona.id_persona WHERE cliente.id_cliente = $idCliente"
+            val resultSet = statement.executeQuery(query)
+            if (resultSet.next()) {
+                val huellaDactilar = resultSet.getBytes("huellaDactilar")
+                // Asegúrate de tener un constructor en PacienteDetalle que acepte estos parámetros
+                paciente = PacienteDetalle(
+                    resultSet.getInt("id_cliente") ?: 0,
+                    resultSet.getInt("id_persona") ?: 0,
+                    resultSet.getString("nombre") ?: "",
+                    resultSet.getString("apellido") ?: "",
+                    resultSet.getString("cedula") ?: "",
+                    resultSet.getString("telefono") ?: "",
+                    resultSet.getBoolean("habilitado") ?: false,
+                    resultSet.getString("correo") ?: "",
+                    huellaDactilar // Se usa el valor predeterminado si huellaDactilarBytes es nulo
+                )
+            }
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                statement?.close()
+                connection?.close()
+            } catch (ex: SQLException) {
+                ex.printStackTrace()
+            }
+        }
+        return paciente
+    }
+
+    // Llama a esta función en tu actividad para obtener el ID de la receta en un hilo secundario.
+    fun obtenerIdClientePorCodigoRecetaAsync(codigoReceta: String, callback: (Int) -> Unit) {
+        AsyncTask.execute {
+            val clienteId = obtenerIdClientePorCodigoReceta(codigoReceta)
+            callback(clienteId)
+        }
+    }
+    private fun obtenerIdClientePorCodigoReceta(codigoReceta: String): Int {
+        val connection = getConnection()
+        val statement = connection?.createStatement()
+
+        val query = "SELECT id_paciente FROM receta WHERE codigo_receta = '$codigoReceta'"
+        val resultSet = statement?.executeQuery(query)
+
+        var clienteId = -1
+
+        if (resultSet?.next() == true) {
+            clienteId = resultSet.getInt("id_paciente")
+        }
+
+        connection?.close()
+        return clienteId
+    }
     fun fetchPatientsFromDB(): List<PacienteDetalle> {
         val patients = mutableListOf<PacienteDetalle>()
         val connection = getConnection()
@@ -148,43 +209,6 @@ object DatabaseConnection {
         return true
     }
 
-    fun getRecetaId(codigoReceta: String): Int {
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        val query = "SELECT id_receta FROM receta WHERE codigo_receta = '$codigoReceta'"
-        val resultSet = statement?.executeQuery(query)
-
-        var recetaId = 0
-
-        if (resultSet?.next() == true) {
-            recetaId = resultSet.getInt("id_receta")
-        }
-
-        connection?.close()
-        return recetaId
-    }
-
-    fun saveDetallesReceta(detallesReceta: List<receta_listado>): Boolean {
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        for (detalle in detallesReceta) {
-            val query = """
-            INSERT INTO receta_listado (id_receta, id_farmaco, cantidad, aplicacion)
-            VALUES (${detalle.id_receta}, ${detalle.id_farmaco}, ${detalle.dosis}, '${detalle.aplicacion}')
-        """
-            val result = statement?.executeUpdate(query)
-
-            if (result != 1) {
-                connection?.close()
-                return false
-            }
-        }
-
-        connection?.close()
-        return true
-    }
 // Extendiendo la clase DatabaseConnection
 
     fun getRecetaByCodigo(codigoReceta: String): receta? {
@@ -280,6 +304,8 @@ object DatabaseConnection {
         connection?.close()
         return farmacosList
     }
+
+
     fun getPatientById(idCliente: Int): PacienteDetalle? {
         val connection = getConnection()
         val statement = connection?.createStatement()
@@ -309,41 +335,6 @@ object DatabaseConnection {
         connection?.close()
         return paciente
     }
-    fun getFarmacoById(idFarmaco: Int): farmaco? {
-        var connection: Connection? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
-
-        try {
-            connection = getConnection()
-            statement = connection?.createStatement()
-
-            val query = "SELECT * FROM farmaco WHERE id_farmaco = $idFarmaco"
-            resultSet = statement?.executeQuery(query)
-
-            if (resultSet?.next() == true) {
-                return farmaco(
-                    resultSet.getInt("id_farmaco"),
-                    resultSet.getString("nombre_generico") ?: "",
-                    resultSet.getString("forma_farmaceutica") ?: "",
-                    resultSet.getInt("inventario"),
-                    resultSet.getString("concentracion") ?: "",
-                    resultSet.getInt("id_proveedor"),
-                    resultSet.getString("bar_code") ?: ""
-                )
-            }
-        } catch (ex: SQLException) {
-            // Aquí puedes manejar o registrar el error si lo deseas
-            ex.printStackTrace()
-        } finally {
-            // Asegúrate de cerrar los recursos en el bloque finally
-            resultSet?.close()
-            statement?.close()
-            connection?.close()
-        }
-
-        return null
-    }
 
     fun getAllFarmacos(): List<farmaco> {
         val farmacos = mutableListOf<farmaco>()
@@ -370,140 +361,56 @@ object DatabaseConnection {
         connection?.close()
         return farmacos
     }
-    fun fetchAllMedicos(): List<medico> {
-        val medicos = mutableListOf<medico>()
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        val resultSet = statement?.executeQuery("""
-            SELECT * 
-            FROM medico 
-            INNER JOIN persona ON medico.id_persona = persona.id_persona
-        """)
-
-        if (resultSet != null) {
-            while (resultSet.next()) {
-                val med = medico(
-                    resultSet.getInt("id_medico"),
-                    resultSet.getInt("id_persona"),
-                    resultSet.getString("especializacion"),
-                    resultSet.getBoolean("habilitado")
-                )
-                medicos.add(med)
-            }
-        }
-
-        connection?.close()
-        return medicos
-    }
-
-    fun fetchAllFarmaceuticos(): List<farmaceutico> {
-        val farmaceuticos = mutableListOf<farmaceutico>()
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        val resultSet = statement?.executeQuery("""
-            SELECT * 
-            FROM farmaceutico 
-            INNER JOIN persona ON farmaceutico.id_persona = persona.id_persona
-        """)
-
-        if (resultSet != null) {
-            while (resultSet.next()) {
-                val farm = farmaceutico(
-                    resultSet.getInt("id_farmaceutico"),
-                    resultSet.getInt("id_persona"),
-                    resultSet.getBoolean("habilitado")
-                )
-                farmaceuticos.add(farm)
-            }
-        }
-
-        connection?.close()
-        return farmaceuticos
-    }
-
-    fun updateMedicoHabilitado(id_medico: Int, habilitado: Boolean): Boolean {
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        val rowsAffected = statement?.executeUpdate("""
-            UPDATE medico 
-            SET habilitado = $habilitado 
-            WHERE id_medico = $id_medico
-        """)
-
-        connection?.close()
-        return rowsAffected == 1
-    }
-
-    fun updateFarmaceuticoHabilitado(id_farmaceutico: Int, habilitado: Boolean): Boolean {
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-
-        val rowsAffected = statement?.executeUpdate("""
-            UPDATE farmaceutico 
-            SET habilitado = $habilitado 
-            WHERE id_farmaceutico = $id_farmaceutico
-        """)
-
-        connection?.close()
-        return rowsAffected == 1
-    }
-
-    fun updateFingerprint(idCliente: Int, huellaDactilar: ByteArray): Boolean {
+    @JvmStatic
+    fun getFingerprintByPatientId(idPaciente: Int): ByteArray? {
         var connection: Connection? = null
         var preparedStatement: PreparedStatement? = null
-        var rowsUpdated = 0
-        try {
+        return try {
             connection = getConnection()
-            val query = "UPDATE cliente SET huellaDactilar = ? WHERE id_cliente = ?"
+            val query ="SELECT \"huellaDactilar\" FROM cliente WHERE id_cliente = ?"
             preparedStatement = connection?.prepareStatement(query)
-            preparedStatement?.setBytes(1, huellaDactilar)
-            preparedStatement?.setInt(2, idCliente)
-            rowsUpdated = preparedStatement?.executeUpdate() ?: 0
+            preparedStatement?.setInt(1, idPaciente)
+            logger.info("Ejecutando consulta SQL: $query")
+            val resultSet = preparedStatement?.executeQuery()
+            logger.info("Result SQL: $resultSet")
+            return if (resultSet?.next() == true) {
+                resultSet.getBytes("huellaDactilar")
+            } else {
+                null
+            }
         } catch (e: SQLException) {
-            Log.e("DBConnectionError", "Error al actualizar la huella dactilar", e)
+            Log.e("Error al traer la huella", "Error al guardar la huella dactilar en la base de datos", e)
+            return null
+        } finally {
+            preparedStatement?.close()
+            connection?.close()
+        }
+    }
+    @JvmStatic
+    fun saveFingerprintToDatabase(patientId: Int, fingerprint: ByteArray): Boolean {
+        var connection: Connection? = null
+        var preparedStatement: PreparedStatement? = null
+
+        return try {
+            connection = getConnection()
+            val query = "UPDATE cliente SET \"huellaDactilar\" = ? WHERE id_cliente = ?"
+            preparedStatement = connection?.prepareStatement(query)
+            preparedStatement?.setBytes(1, fingerprint)
+            preparedStatement?.setInt(2, patientId)
+            logger.info("Ejecutando consulta SQL: $query")
+            logger.info("Datos: huellaDactilar = ${fingerprint.toString()}, id_cliente = $patientId")
+            val rowsUpdated = preparedStatement?.executeUpdate() ?: 0
+            rowsUpdated == 1  // Retorna true si se actualizó una fila, false en caso contrario
+        } catch (e: SQLException) {
+            Log.e("DBConnectionError", "Error al guardar la huella dactilar en la base de datos", e)
+            false  // Retorna false si ocurrió un error
         } finally {
             // Asegurarte de cerrar los recursos en el bloque finally
             preparedStatement?.close()
             connection?.close()
         }
-        return rowsUpdated == 1
     }
 
-    fun updateFingerprintAsync(idCliente: Int, huellaDactilar: ByteArray, callback: (Boolean) -> Unit) {
-        AsyncTask.execute {
-            var connection: Connection? = null
-            var preparedStatement: PreparedStatement? = null
-            var rowsUpdated = 0
-            try {
-                connection = DriverManager.getConnection(url, user, password)
-                val query = "UPDATE cliente SET huellaDactilar = ? WHERE id_cliente = ?"
-                preparedStatement = connection?.prepareStatement(query)
-                preparedStatement?.setBytes(1, huellaDactilar)
-                preparedStatement?.setInt(2, idCliente)
-                rowsUpdated = preparedStatement?.executeUpdate() ?: 0
-                callback(rowsUpdated == 1)
-            } catch (e: SQLException) {
-                Log.e("DBConnectionError", "Error al actualizar la huella dactilar", e)
-                callback(false)
-            } finally {
-                preparedStatement?.close()
-                connection?.close()
-            }
-        }
-    }
-
-    fun updateRecetaEstadoYFarmaceutico(idReceta: Int, nuevoEstado: String, idFarmaceutico: Int): Boolean {
-        val connection = getConnection()
-        val statement = connection?.createStatement()
-        val rowsAffected = statement?.executeUpdate(
-            "UPDATE receta SET estado = '$nuevoEstado', id_farmaceutico = $idFarmaceutico, fecha_entrega = CURRENT_TIMESTAMP WHERE id_receta = $idReceta"
-        )
-        connection?.close()
-        return rowsAffected == 1
-    }
 
 
 

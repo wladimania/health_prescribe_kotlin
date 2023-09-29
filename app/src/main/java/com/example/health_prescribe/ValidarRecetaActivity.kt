@@ -181,7 +181,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
             Bitmap.Config.ARGB_8888
         )
         grayBitmap!!.setPixels(
-            grayBuffer,
+            grayBuffer as IntArray,
             0,
             JSGFPLib.MAX_IMAGE_WIDTH_ALL_DEVICES,
             0,
@@ -189,6 +189,7 @@ class ValidarRecetaActivity : AppCompatActivity() {
             JSGFPLib.MAX_IMAGE_WIDTH_ALL_DEVICES,
             JSGFPLib.MAX_IMAGE_HEIGHT_ALL_DEVICES
         )
+
         val sintbuffer =
             IntArray(JSGFPLib.MAX_IMAGE_WIDTH_ALL_DEVICES / 2 * (JSGFPLib.MAX_IMAGE_HEIGHT_ALL_DEVICES / 2))
         for (i in sintbuffer.indices) sintbuffer[i] = Color.GRAY

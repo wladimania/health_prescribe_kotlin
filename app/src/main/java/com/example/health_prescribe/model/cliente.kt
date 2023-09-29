@@ -6,5 +6,5 @@ data class cliente(
     val telefono: String,
     val habilitado: Boolean,
     val correo: String,
-    val huellaDactilar: ByteArray
+    val huellaDactilar: ByteArray?
 )

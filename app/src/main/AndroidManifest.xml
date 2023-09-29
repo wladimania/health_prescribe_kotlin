@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-feature android:name="android.hardware.usb.host" />
-    <uses-feature
+   <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
 
     <application
         android:allowBackup="true"
@@ -25,14 +25,9 @@
         android:theme="@style/Theme.Health_prescribe"
         tools:targetApi="31">
         <activity
-            android:name=".prueba"
-            android:exported="true"
-            android:label="@string/title_activity_prueba"
-            android:theme="@style/Theme.Health_prescribe" >  <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+            android:name=".JSGDActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".DetalleRecetaActivity"
             android:exported="false" />
@@ -81,8 +76,12 @@
         <activity
             android:name=".ValidarRecetaActivity"
             android:exported="false">
-
         </activity>
+        <activity
+            android:name=".ValidarReceta"
+            android:exported="false">
+        </activity>
+
         <activity
             android:name=".FarmacoActivity"
             android:exported="false" />
@@ -91,7 +90,17 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false"></activity>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
         <activity
             android:name=".ItemUsuarioPendienteActivity"
             android:exported="false" />

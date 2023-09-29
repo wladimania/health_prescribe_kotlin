@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".prueba">
+    tools:context=".JSGDActivity">
 
 
     <ImageView
@@ -34,8 +34,18 @@
         android:layout_x="239dp"
         android:layout_y="369dp"
         android:clickable="false"
-        android:text="string/cb_matched"
+        android:text="@string/matched"
         android:textSize="30sp" />
+
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="9dp"
+        android:layout_y="52dp"
+        android:hint="@string/ingrese_texto_aqu"
+        android:importantForAccessibility="yes" />
 
     <EditText
         android:id="@+id/editLog"
@@ -72,7 +82,7 @@
         android:layout_height="116dp"
         android:layout_x="17dp"
         android:layout_y="533dp"
-        android:text="stringwelcome"
+        android:text="@string/stringwelcome"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -83,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_x="7dp"
         android:layout_y="490dp"
-        android:text="Log Output (SCROLL)"
+        android:text="@string/log_output_scroll"
         android:visibility="visible" />
 
 
@@ -96,7 +106,8 @@
         android:layout_x="7dp"
         android:layout_y="420dp"
         android:textSize="10sp"
-        android:text="string/registerAutoOn" />
+        android:text="@string/register"
+        tools:ignore="SmallSp" />
 
     <Button
         android:id="@+id/buttonVerifyAutoOn"
@@ -104,8 +115,9 @@
         android:layout_height="wrap_content"
         android:layout_x="157dp"
         android:layout_y="418dp"
-        android:text="string/matchAutoOn"
-        android:textSize="10sp" />
+        android:text="@string/matchautoon"
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 
     <TextView
@@ -113,9 +125,9 @@
         android:layout_width="379dp"
         android:layout_height="38dp"
         android:layout_marginTop="300dp"
-        android:layout_x="10dp"
-        android:layout_y="5dp"
-        android:text="string/welcome"
+        android:layout_x="5dp"
+        android:layout_y="6dp"
+        android:text="@string/bienvenido"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="18sp"
         android:textStyle="bold" />

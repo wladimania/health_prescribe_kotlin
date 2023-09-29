@@ -11,5 +11,5 @@ data class PacienteDetalle(
     val telefono: String,
     val habilitado: Boolean,
     val correo: String,
-    val huellaDactilar: Serializable
-)
+    val huellaDactilar: ByteArray?
+) : Serializable

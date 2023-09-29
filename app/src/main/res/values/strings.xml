@@ -46,4 +46,14 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="string_registerautoon">string/registerAutoOn</string>
+    <string name="string_matchautoon">string/matchAutoOn</string>
+    <string name="register">Register</string>
+    <string name="matchautoon">matchautoon</string>
+    <string name="bienvenido">Bienvenido</string>
+    <string name="descripci_n_de_campo_dde_texto" />
+    <string name="ingrese_texto_aqu" />
+    <string name="matched" />
+    <string name="log_output_scroll">Log Output (SCROLL)</string>
+    <string name="stringwelcome">stringwelcome</string>
 </resources>
